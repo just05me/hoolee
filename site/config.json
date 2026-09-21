@@ -1,0 +1,14 @@
+{
+  "domain": "https://hoolee.uz",
+  "demo_url": "http://127.0.0.1:8787",
+  "email": "",
+  "bot_username": "",
+  "api_path": "/api/lead",
+  "verification": {
+    "google": "",
+    "yandex": ""
+  },
+  "analytics": {
+    "yandex_metrika_id": ""
+  }
+}

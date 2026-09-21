@@ -1,0 +1,10 @@
+# nested repo с проектом Anton (приватный, кладётся вручную)
+/anton/
+dist/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.DS_Store
+.claude/

@@ -1,0 +1,225 @@
+{
+  "tenant": {
+    "name": "Дўстлик Опт",
+    "sub": "Опт · Товары для дома · Ташкент",
+    "timezone": "Asia/Tashkent",
+    "note": "Демо-компания. Все клиенты, сделки и суммы ниже — вымышленные данные для демонстрации."
+  },
+
+  "departments": [
+    {
+      "id": "sales",
+      "name": "Продажи",
+      "color": "#FF8A00",
+      "kind": "core",
+      "budgetUsdMonth": 150,
+      "spentUsd": 4.2,
+      "idleDespawnMin": 15,
+      "skills": ["kp_generator", "lead_qualification", "funnel_update"],
+      "bridges": ["marketing", "support"],
+      "roles": [
+        { "role": "lead", "label": "Руководитель", "maxAgents": 1 },
+        { "role": "executor", "label": "Исполнитель", "maxAgents": 4 }
+      ]
+    },
+    {
+      "id": "marketing",
+      "name": "Маркетинг",
+      "color": "#BF5AF2",
+      "kind": "core",
+      "budgetUsdMonth": 120,
+      "spentUsd": 2.1,
+      "idleDespawnMin": 15,
+      "skills": ["ad_copy_generator", "post_scheduler", "price_list_sync"],
+      "bridges": ["sales", "analytics"],
+      "roles": [
+        { "role": "lead", "label": "Руководитель", "maxAgents": 1 },
+        { "role": "executor", "label": "Исполнитель", "maxAgents": 3 }
+      ]
+    },
+    {
+      "id": "support",
+      "name": "Поддержка",
+      "color": "#64D2FF",
+      "kind": "core",
+      "budgetUsdMonth": 80,
+      "spentUsd": 1.4,
+      "idleDespawnMin": 15,
+      "skills": ["complaint_triage", "order_lookup"],
+      "bridges": ["sales", "analytics"],
+      "roles": [
+        { "role": "lead", "label": "Руководитель", "maxAgents": 1 },
+        { "role": "executor", "label": "Исполнитель", "maxAgents": 3 }
+      ]
+    },
+    {
+      "id": "analytics",
+      "name": "Аналитика",
+      "color": "#30D158",
+      "kind": "core",
+      "budgetUsdMonth": 90,
+      "spentUsd": 0.9,
+      "idleDespawnMin": 15,
+      "skills": ["stock_alert", "funnel_update"],
+      "bridges": ["marketing", "support"],
+      "roles": [
+        { "role": "lead", "label": "Руководитель", "maxAgents": 1 },
+        { "role": "executor", "label": "Исполнитель", "maxAgents": 2 }
+      ]
+    }
+  ],
+
+  "funnelStages": [
+    { "id": "new", "label": "Новый лид", "color": "#8E929B" },
+    { "id": "qualifying", "label": "Квалификация", "color": "#64D2FF" },
+    { "id": "negotiation", "label": "Переговоры", "color": "#FFB340" },
+    { "id": "proposal_sent", "label": "КП отправлено", "color": "#FF8A00" },
+    { "id": "won", "label": "Закрыта: успех", "color": "#30D158" },
+    { "id": "lost", "label": "Закрыта: отказ", "color": "#FF453A" }
+  ],
+
+  "clients": [
+    { "id": "c1", "name": "«Уй-Рўзғор Маркет»", "segment": "Сеть магазинов", "city": "Ташкент, Чиланзар" },
+    { "id": "c2", "name": "ИП Расулов Б.Т.", "segment": "Розница", "city": "Ташкент, Юнусабад" },
+    { "id": "c3", "name": "«Оилавий Дўкон»", "segment": "Сеть мини-маркетов", "city": "Ташкент, Мирзо-Улугбек" },
+    { "id": "c4", "name": "«Барака Трейд»", "segment": "Региональный дистрибьютор", "city": "Самарканд" },
+    { "id": "c5", "name": "«Ёркин Маркет»", "segment": "Супермаркет", "city": "Ташкент, Сергели" },
+    { "id": "c6", "name": "ИП Юлдашева Н.", "segment": "Розница", "city": "Ташкент, Яккасарай" },
+    { "id": "c7", "name": "«Тонг Групп»", "segment": "Сеть хозмагазинов", "city": "Андижан" },
+    { "id": "c8", "name": "«Наврўз Трейдинг»", "segment": "Опт-розница", "city": "Фергана" },
+    { "id": "c9", "name": "«Азиз Маркет»", "segment": "Минимаркет", "city": "Ташкент, Мирабад" },
+    { "id": "c10", "name": "«Достона Опт»", "segment": "Субдистрибьютор", "city": "Бухара" }
+  ],
+
+  "deals": [
+    { "id": "d1", "clientId": "c1", "title": "Партия стирального порошка 500 уп.", "stage": "negotiation", "amountUsd": 3200, "source": "Telegram-бот", "updatedAt": "2026-09-17" },
+    { "id": "d2", "clientId": "c4", "title": "Регулярная поставка бытовой химии", "stage": "won", "amountUsd": 8600, "source": "Звонок", "updatedAt": "2026-09-12" },
+    { "id": "d3", "clientId": "c5", "title": "Пробная партия — товары для дома", "stage": "proposal_sent", "amountUsd": 1450, "source": "Сайт", "updatedAt": "2026-09-16" },
+    { "id": "d4", "clientId": "c2", "title": "Разовая закупка чистящих средств", "stage": "qualifying", "amountUsd": 420, "source": "WhatsApp", "updatedAt": "2026-09-18" },
+    { "id": "d5", "clientId": "c7", "title": "Годовой контракт — хозтовары", "stage": "negotiation", "amountUsd": 15400, "source": "Встреча", "updatedAt": "2026-09-15" },
+    { "id": "d6", "clientId": "c3", "title": "Расширение ассортимента, 3 SKU", "stage": "new", "amountUsd": 780, "source": "Mini App", "updatedAt": "2026-09-18" },
+    { "id": "d7", "clientId": "c8", "title": "Опт партия — сезонный спрос", "stage": "won", "amountUsd": 5200, "source": "Звонок", "updatedAt": "2026-09-10" },
+    { "id": "d8", "clientId": "c9", "title": "Пробный заказ", "stage": "lost", "amountUsd": 310, "source": "Instagram", "updatedAt": "2026-09-08" },
+    { "id": "d9", "clientId": "c10", "title": "Субдистрибуция — новый регион", "stage": "negotiation", "amountUsd": 6700, "source": "Партнёрская сеть", "updatedAt": "2026-09-14" },
+    { "id": "d10", "clientId": "c6", "title": "Разовая закупка к сезону", "stage": "proposal_sent", "amountUsd": 260, "source": "Telegram-бот", "updatedAt": "2026-09-17" },
+    { "id": "d11", "clientId": "c1", "title": "Допродажа — бумажная продукция", "stage": "qualifying", "amountUsd": 540, "source": "Чат на сайте", "updatedAt": "2026-09-18" },
+    { "id": "d12", "clientId": "c4", "title": "Продление годового договора", "stage": "negotiation", "amountUsd": 9100, "source": "Встреча", "updatedAt": "2026-09-13" },
+    { "id": "d13", "clientId": "c5", "title": "Недостача по заказу №1042", "stage": "won", "amountUsd": 0, "source": "Поддержка", "updatedAt": "2026-09-18" },
+    { "id": "d14", "clientId": "c7", "title": "Новая точка продаж — открытие", "stage": "new", "amountUsd": 1200, "source": "Referral", "updatedAt": "2026-09-17" }
+  ],
+
+  "kbNodes": [
+    { "id": "root", "type": "topic", "title": "База знаний", "departmentId": null },
+    { "id": "t-sales", "type": "topic", "title": "Продажи", "departmentId": "sales", "parent": "root" },
+    { "id": "t-sales-scripts", "type": "topic", "title": "Скрипты и возражения", "departmentId": "sales", "parent": "t-sales" },
+    { "id": "l-sales-1", "type": "lesson", "title": "Возражение «дорого» — сравнение за упаковку, не за партию", "departmentId": "sales", "parent": "t-sales-scripts", "confidence": 0.92, "uses": 14 },
+    { "id": "l-sales-2", "type": "lesson", "title": "Опт от 300 шт — упоминать скидку в первом сообщении", "departmentId": "sales", "parent": "t-sales-scripts", "confidence": 0.88, "uses": 9 },
+    { "id": "d-sales-price", "type": "doc", "title": "Прайс-лист (актуальный)", "departmentId": "sales", "parent": "t-sales" },
+    { "id": "d-sales-terms", "type": "doc", "title": "Условия опта и отсрочки", "departmentId": "sales", "parent": "t-sales" },
+
+    { "id": "t-marketing", "type": "topic", "title": "Маркетинг", "departmentId": "marketing", "parent": "root" },
+    { "id": "t-marketing-tpl", "type": "topic", "title": "Шаблоны публикаций", "departmentId": "marketing", "parent": "t-marketing" },
+    { "id": "d-marketing-tone", "type": "doc", "title": "Тон бренда: просто, по-делу, без «воды»", "departmentId": "marketing", "parent": "t-marketing" },
+    { "id": "l-marketing-1", "type": "lesson", "title": "Посты про акции — короче на 30%, конверсия выше", "departmentId": "marketing", "parent": "t-marketing-tpl", "confidence": 0.81, "uses": 6 },
+
+    { "id": "t-support", "type": "topic", "title": "Поддержка", "departmentId": "support", "parent": "root" },
+    { "id": "t-support-faq", "type": "topic", "title": "Частые обращения", "departmentId": "support", "parent": "t-support" },
+    { "id": "l-support-1", "type": "lesson", "title": "Недостача в заказе — сверка по накладной, потом компенсация", "departmentId": "support", "parent": "t-support-faq", "confidence": 0.95, "uses": 21 },
+    { "id": "entity-order-1042", "type": "entity", "title": "Заказ №1042 — «Ёркин Маркет»", "departmentId": "support", "parent": "t-support-faq", "fields": { "client": "«Ёркин Маркет»", "issue": "Недостача 12 уп.", "status": "решено" } },
+
+    { "id": "t-analytics", "type": "topic", "title": "Аналитика", "departmentId": "analytics", "parent": "root" },
+    { "id": "d-analytics-report", "type": "doc", "title": "Шаблон еженедельного отчёта по остаткам", "departmentId": "analytics", "parent": "t-analytics" },
+
+    { "id": "t-logistics", "type": "topic", "title": "Логистика · врем.", "departmentId": "logistics", "parent": "root" },
+    { "id": "d-logistics-import", "type": "doc", "title": "Памятка по ввозу партий из Китая", "departmentId": "logistics", "parent": "t-logistics" }
+  ],
+
+  "kbEdges": [
+    { "from": "root", "to": "t-sales", "type": "in_topic" },
+    { "from": "root", "to": "t-marketing", "type": "in_topic" },
+    { "from": "root", "to": "t-support", "type": "in_topic" },
+    { "from": "root", "to": "t-analytics", "type": "in_topic" },
+    { "from": "root", "to": "t-logistics", "type": "in_topic" },
+    { "from": "t-sales", "to": "t-sales-scripts", "type": "in_topic" },
+    { "from": "t-sales-scripts", "to": "l-sales-1", "type": "in_topic" },
+    { "from": "t-sales-scripts", "to": "l-sales-2", "type": "in_topic" },
+    { "from": "t-sales", "to": "d-sales-price", "type": "in_topic" },
+    { "from": "t-sales", "to": "d-sales-terms", "type": "in_topic" },
+    { "from": "t-marketing", "to": "t-marketing-tpl", "type": "in_topic" },
+    { "from": "t-marketing", "to": "d-marketing-tone", "type": "in_topic" },
+    { "from": "t-marketing-tpl", "to": "l-marketing-1", "type": "in_topic" },
+    { "from": "t-support", "to": "t-support-faq", "type": "in_topic" },
+    { "from": "t-support-faq", "to": "l-support-1", "type": "in_topic" },
+    { "from": "t-support-faq", "to": "entity-order-1042", "type": "relates" },
+    { "from": "t-analytics", "to": "d-analytics-report", "type": "in_topic" },
+    { "from": "t-logistics", "to": "d-logistics-import", "type": "in_topic" },
+    { "from": "l-sales-2", "to": "d-sales-terms", "type": "relates" }
+  ],
+
+  "skills": [
+    { "id": "sk1", "name": "kp_generator", "title": "Генератор коммерческих предложений", "departmentIds": ["sales"], "status": "active", "version": "1.3" },
+    { "id": "sk2", "name": "lead_qualification", "title": "Квалификация лида", "departmentIds": ["sales"], "status": "active", "version": "1.1" },
+    { "id": "sk3", "name": "funnel_update", "title": "Обновление воронки", "departmentIds": ["sales", "analytics"], "status": "active", "version": "1.0" },
+    { "id": "sk4", "name": "ad_copy_generator", "title": "Тексты для рекламных постов", "departmentIds": ["marketing"], "status": "active", "version": "2.0" },
+    { "id": "sk5", "name": "post_scheduler", "title": "Планирование публикаций", "departmentIds": ["marketing"], "status": "draft", "version": "0.4" },
+    { "id": "sk6", "name": "price_list_sync", "title": "Синхронизация прайс-листа", "departmentIds": ["marketing", "sales"], "status": "review", "version": "0.9" },
+    { "id": "sk7", "name": "complaint_triage", "title": "Разбор жалоб клиентов", "departmentIds": ["support"], "status": "active", "version": "1.2" },
+    { "id": "sk8", "name": "order_lookup", "title": "Поиск заказа по номеру", "departmentIds": ["support"], "status": "active", "version": "1.0" },
+    { "id": "sk9", "name": "stock_alert", "title": "Оповещение по остаткам", "departmentIds": ["analytics"], "status": "active", "version": "1.1" }
+  ],
+
+  "services": [
+    { "id": "svc-telegram", "name": "Telegram", "kind": "default", "status": "ok", "note": "Bot API + Mini App" },
+    { "id": "svc-google", "name": "Google", "kind": "default", "status": "ok", "note": "Gmail, Drive, Sheets, Calendar" },
+    { "id": "svc-whatsapp", "name": "WhatsApp", "kind": "default", "status": "disabled", "note": "Cloud API — ожидает одобрения" },
+    { "id": "svc-meta", "name": "Meta", "kind": "default", "status": "disabled", "note": "Страницы, Instagram, реклама" },
+    { "id": "svc-search", "name": "Serper", "kind": "default", "status": "ok", "note": "Поиск для агента-парсера" },
+    { "id": "svc-stt", "name": "Yandex SpeechKit", "kind": "default", "status": "ok", "note": "Распознавание узбекского" }
+  ],
+
+  "users": [
+    { "id": "u1", "name": "Азиз Р.", "role": "admin", "totp": true, "status": "online" },
+    { "id": "u2", "name": "Марат Т.", "role": "owner", "totp": true, "status": "online" },
+    { "id": "u3", "name": "Дилноза К.", "role": "employee", "department": "sales", "status": "online" },
+    { "id": "u4", "name": "Шерзод А.", "role": "employee", "department": "sales", "status": "offline" },
+    { "id": "u5", "name": "Камола Ю.", "role": "employee", "department": "marketing", "status": "online" },
+    { "id": "u6", "name": "Бахтиёр Н.", "role": "employee", "department": "support", "status": "offline" }
+  ],
+
+  "auditLog": [
+    { "id": "a1", "actor": "Азиз Р.", "action": "Вход в систему", "ts": "2026-09-18T08:02:00+05:00" },
+    { "id": "a2", "actor": "Марат Т.", "action": "Изменил бюджет отдела «Маркетинг»: 100 → 120 $", "ts": "2026-09-17T16:41:00+05:00" },
+    { "id": "a3", "actor": "Дилноза К.", "action": "Подтвердила отправку КП клиенту «Ёркин Маркет»", "ts": "2026-09-17T14:12:00+05:00" },
+    { "id": "a4", "actor": "Система", "action": "Отдел «Логистика · врем.» переведён в dormant (нет активности)", "ts": "2026-09-16T22:00:00+05:00" },
+    { "id": "a5", "actor": "Камола Ю.", "action": "Включила скилл price_list_sync (review → active) — отклонено", "ts": "2026-09-16T11:05:00+05:00" }
+  ],
+
+  "usageHistory": [
+    { "date": "2026-09-05", "tokensIn": 41000, "tokensOut": 18500, "costUsd": 0.36 },
+    { "date": "2026-09-06", "tokensIn": 38500, "tokensOut": 16200, "costUsd": 0.32 },
+    { "date": "2026-09-07", "tokensIn": 52000, "tokensOut": 24100, "costUsd": 0.47 },
+    { "date": "2026-09-08", "tokensIn": 29500, "tokensOut": 12800, "costUsd": 0.25 },
+    { "date": "2026-09-09", "tokensIn": 61200, "tokensOut": 28900, "costUsd": 0.55 },
+    { "date": "2026-09-10", "tokensIn": 67800, "tokensOut": 31200, "costUsd": 0.60 },
+    { "date": "2026-09-11", "tokensIn": 45300, "tokensOut": 19700, "costUsd": 0.39 },
+    { "date": "2026-09-12", "tokensIn": 58900, "tokensOut": 27100, "costUsd": 0.52 },
+    { "date": "2026-09-13", "tokensIn": 33200, "tokensOut": 14500, "costUsd": 0.28 },
+    { "date": "2026-09-14", "tokensIn": 49700, "tokensOut": 22300, "costUsd": 0.43 },
+    { "date": "2026-09-15", "tokensIn": 72100, "tokensOut": 33800, "costUsd": 0.65 },
+    { "date": "2026-09-16", "tokensIn": 68400, "tokensOut": 30500, "costUsd": 0.61 },
+    { "date": "2026-09-17", "tokensIn": 81200, "tokensOut": 37900, "costUsd": 0.72 },
+    { "date": "2026-09-18", "tokensIn": 12400, "tokensOut": 5100, "costUsd": 0.11 }
+  ],
+
+  "pricingConfig": {
+    "deepseek-chat": { "inputPerM": 0.27, "outputPerM": 1.10, "note": "Ориентировочно, см. platform.deepseek.com/api-docs/pricing" }
+  },
+
+  "quickPrompts": [
+    { "id": "qp1", "text": "Сколько сейчас активных сделок на стадии «Переговоры»?", "hint": "Простой вопрос — прямой ответ без запуска цикла" },
+    { "id": "qp2", "text": "Подготовь коммерческое предложение для «Уй-Рўзғор Маркет»: партия стирального порошка 500 упаковок, нужна скидка за опт от 300 шт", "hint": "Продажи — план из 1 блока" },
+    { "id": "qp3", "text": "Запусти акцию на складские остатки бытовой химии: нужна рассылка клиентам, пост в Instagram и обновление цен в прайсе", "hint": "Продажи + Маркетинг + Аналитика — параллельно" },
+    { "id": "qp4", "text": "Оформи заявку на таможенное оформление партии товара из Китая", "hint": "Вне текущих отделов — создастся временный отдел «Логистика»" },
+    { "id": "qp5", "text": "Клиент «Ёркин Маркет» жалуется: заказ №1042 пришёл с недостачей 12 упаковок — разберись и предложи решение", "hint": "Поддержка — работа с базой знаний" }
+  ]
+}

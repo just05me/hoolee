@@ -1,0 +1,18 @@
+# Добавить в /etc/caddy/Caddyfile на сервере (блок ffinance.uz не трогать), затем: sudo systemctl reload caddy
+hoolee.uz, www.hoolee.uz {
+	encode zstd gzip
+	@www host www.hoolee.uz
+	redir @www https://hoolee.uz{uri} permanent
+
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8788
+	}
+	handle {
+		reverse_proxy 127.0.0.1:4321
+	}
+}
+
+demo.hoolee.uz {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8787
+}
