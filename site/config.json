@@ -1,7 +1,7 @@
 {
   "domain": "https://arcoai.info",
   "demo_url": "https://demo.arcoai.info",
-  "email": "hoolee.uz@gmail.com",
+  "email": "",
   "api_path": "/api/lead",
   "verification": {
     "google": "",

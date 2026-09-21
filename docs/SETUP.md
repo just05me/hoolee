@@ -3,7 +3,7 @@
 ## Contacts and lead handling
 
 Public Telegram bot: https://t.me/ARCOAI_bot
-Public email: hoolee.uz@gmail.com
+Public email: none for now (removed from the site; set "email" in site/config.json to bring it back).
 
 Every lead, from the website form and from the bot dialog, is stored in SQLite (`/data/leads.db`, shared Docker volume `data`) and sent to every admin. Admins are the Telegram user ids in `ADMIN_IDS` (comma-separated); each admin must press Start in the bot once. Any admin can press "Взять в работу": the message updates for all admins and shows who took it. Admins can list recent leads with `/leads`; anyone can learn their own id with `/whoami`.
 
