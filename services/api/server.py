@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""hoolee API — приём заявок с сайта и отправка их в Telegram-бота. Только stdlib.
+"""ARCOAI API — приём заявок с сайта и отправка их в Telegram-бота. Только stdlib.
 
 Переменные окружения (можно положить в .env рядом с файлом):
   BOT_TOKEN   токен бота из @BotFather
-  CHAT_ID     id вашего чата с ботом (узнать: python3 server.py --chat-id)
+  ADMIN_IDS   Telegram user_id админов через запятую (узнать свой: написать боту /whoami)
+              Заявки сохраняются в SQLite (DB_PATH) и уходят каждому админу.
   HOST, PORT  по умолчанию 127.0.0.1:8788
   ALLOWED_ORIGIN  необязательно: https://arcoai.info
 
-Без BOT_TOKEN/CHAT_ID заявка не принимается и не печатается в лог,
+Без BOT_TOKEN/ADMIN_IDS заявка не принимается и не печатается в лог,
 клиенту возвращается ошибка 503; ложного подтверждения отправки нет.
 """
 from __future__ import annotations
@@ -16,13 +17,9 @@ import json
 import os
 import sys
 import time
-import urllib.error
-import urllib.parse
-import urllib.request
 from collections import deque
 from threading import Lock
 import ipaddress
-from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -44,8 +41,8 @@ def load_env() -> None:
 
 
 load_env()
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "").strip()
-CHAT_ID = os.environ.get("CHAT_ID", "").strip()
+sys.path[:0] = [str(ROOT), str(ROOT.parent)]  # общий код: services/common (локально) или /app/common (Docker)
+from common import leads  # noqa: E402
 HOST = os.environ.get("HOST", "127.0.0.1")
 PORT = int(os.environ.get("PORT", "8788"))
 ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "").strip()
@@ -73,31 +70,9 @@ def rate_ok(ip: str) -> bool:
         return True
 
 
-def tg(method: str, payload: dict) -> dict:
-    req = urllib.request.Request(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/{method}",
-        data=json.dumps(payload).encode(),
-        headers={"Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=10) as r:
-        return json.loads(r.read().decode())
-
-
-def format_lead(d: dict) -> str:
-    e = lambda k: escape(d.get(k, "") or "—")  # noqa: E731
-    return (
-        "<b>🟠 Новая заявка · arcoai.info</b>\n\n"
-        f"<b>Имя:</b> {e('name')}\n"
-        f"<b>Компания:</b> {e('company')}\n"
-        f"<b>Контакт:</b> {e('contact')}\n"
-        f"<b>Язык / страница:</b> {e('lang')} / {e('page')}\n\n"
-        f"{e('message')}"
-    )
-
-
 class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
-    server_version = "hoolee-api"
+    server_version = "ARCOAI-api"
 
     def _json(self, obj: dict, status: int = 200) -> None:
         body = json.dumps(obj, ensure_ascii=False).encode()
@@ -132,7 +107,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         if self.path.rstrip("/") in ("/api/health", "/health"):
-            self._json({"ok": True, "telegram": bool(BOT_TOKEN and CHAT_ID)})
+            self._json({"ok": True, "telegram": leads.configured()})
         else:
             self._json({"ok": False, "error": "not found"}, 404)
 
@@ -177,44 +152,28 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"ok": False, "error": "required fields"}, 422)
             return
 
-        text = format_lead(d)
-        if not (BOT_TOKEN and CHAT_ID):
+        if not leads.configured():
             self._json({"ok": False, "error": "delivery not configured"}, 503)
             return
         try:
-            res = tg("sendMessage", {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True})
-            self._json({"ok": bool(res.get("ok"))}, 200 if res.get("ok") else 502)
-        except (urllib.error.URLError, TimeoutError, ValueError) as e:
-            sys.stderr.write("· Telegram delivery failed\n")
-            self._json({"ok": False, "error": "upstream"}, 502)
+            lead_id = leads.add_lead("site", **d)
+            delivered = leads.notify_admins(lead_id)
+        except (OSError, leads.sqlite3.Error):
+            sys.stderr.write("· storage failed\n")
+            self._json({"ok": False, "error": "storage"}, 500)
+            return
+        if not delivered:
+            sys.stderr.write("· Telegram delivery failed (lead #%d saved)\n" % lead_id)
+        self._json({"ok": bool(delivered)}, 200 if delivered else 502)
 
     def log_message(self, fmt: str, *args) -> None:
         sys.stderr.write("· %s\n" % (fmt % args))
 
 
-def print_chat_id() -> None:
-    if not BOT_TOKEN:
-        sys.exit("Сначала задайте BOT_TOKEN (в .env или в окружении), затем напишите боту любое сообщение.")
-    res = tg("getUpdates", {})
-    seen = {}
-    for u in res.get("result", []):
-        m = u.get("message") or u.get("channel_post") or {}
-        c = m.get("chat")
-        if c:
-            seen[c["id"]] = c.get("username") or c.get("title") or c.get("first_name")
-    if not seen:
-        sys.exit("Обновлений нет. Откройте бота в Telegram, нажмите Start, отправьте любое сообщение и повторите.")
-    for cid, name in seen.items():
-        print(f"CHAT_ID={cid}   ({name})")
-
-
 def main() -> None:
-    if "--chat-id" in sys.argv:
-        print_chat_id()
-        return
     srv = ThreadingHTTPServer((HOST, PORT), Handler)
-    mode = "Telegram" if (BOT_TOKEN and CHAT_ID) else "delivery unavailable (BOT_TOKEN/CHAT_ID не заданы)"
-    print(f"hoolee API · http://{HOST}:{PORT} · режим: {mode}")
+    mode = f"Telegram, админов: {len(leads.ADMIN_IDS)}" if leads.configured() else "delivery unavailable (BOT_TOKEN/ADMIN_IDS не заданы)"
+    print(f"ARCOAI API · http://{HOST}:{PORT} · режим: {mode}")
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

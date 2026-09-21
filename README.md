@@ -1,13 +1,14 @@
-# hoolee
+# ARCOAI
 
-Custom software and business automation studio in Tashkent. Static pages in Uzbek, Russian and English, a Telegram lead API and an isolated Ark Core demo.
+ARCOAI (AI Orchestrator): business automation and AI orchestration studio in Tashkent. Static pages in Uzbek, Russian and English, a lead API, a Telegram lead bot and an isolated Ark Core demo.
 
 ## Run locally
 
 ```sh
 cp .env.example .env
-# Set BOT_TOKEN and CHAT_ID, then press Start in @hooleeuz_bot.
+# Set BOT_TOKEN and ADMIN_IDS (your Telegram id: send /whoami to @ARCOAI_bot), press Start in the bot.
 python3 dev.py
+python3 services/bot/server.py   # optional: run the bot dialog locally
 ```
 
 Site: http://127.0.0.1:4321 · demo: http://127.0.0.1:8787 · API: http://127.0.0.1:8788.
@@ -29,11 +30,13 @@ Browser regression checks: `PLAYWRIGHT_MODULE=/path/to/playwright node scripts/b
 - `site/build.py`: static pages, metadata, sitemap, robots, llms.txt.
 - `site/config.json`: public contact and domain settings. Never put bot tokens here.
 - `site/static/`: accessible responsive UI, vector logo/favicon, real demo screenshot, social card.
-- `services/api/`: bounded, validated lead requests delivered to Telegram; secrets remain server-side.
+- `services/api/`: bounded, validated website leads, stored and delivered to all admins; secrets remain server-side.
+- `services/bot/`: @ARCOAI_bot, a Telegram dialog that collects leads (language, name, contact, task) and sends them to the same admins.
+- `services/common/`: shared lead storage (SQLite) and admin delivery.
 - `services/demo-ark/`: isolated demo with fictional data, no external AI calls.
 - `docker/`, `docker-compose.yml`, `deploy/`: services and host Caddy configuration.
 - `anton/`: excluded private repository; only the public description is published.
 
 ## Deployment
 
-See [deployment and DNS notes](docs/SETUP.md). The server path is `/opt/hoolee`; existing finance and portfolio deployments are separate. The `.env` is excluded from Git and Docker build context.
+See [deployment and DNS notes](docs/SETUP.md). The server path is `/opt/ARCOAI`; existing finance and portfolio deployments are separate. The `.env` is excluded from Git and Docker build context.

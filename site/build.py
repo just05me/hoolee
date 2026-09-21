@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Генератор статического сайта hoolee. Только stdlib.
+"""Генератор статического сайта ARCOAI. Только stdlib.
 
     python3 build.py            # собирает ../dist
     DEMO_URL=https://demo.arcoai.info python3 build.py
@@ -67,7 +67,7 @@ def j(obj) -> str:
 
 # ───────────── SVG / визуальные блоки ─────────────
 def logo_svg() -> str:
-    return '<svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M9 7v26M31 7v26M9 24c0-12 22-12 22-8" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="31" cy="16" r="4" fill="var(--accent)"/></svg>'
+    return '<svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 50V34a15 15 0 0 1 30 0v16M17 40h30" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="47" cy="19" r="5" fill="var(--accent)"/></svg>'
 
 
 def arrow_svg() -> str:
@@ -139,9 +139,9 @@ def head(lang: str, route: str, title: str, desc: str, jsonld: list, noindex: bo
 {alts}
 <meta name="theme-color" content="#08090b">
 <meta name="color-scheme" content="dark light">
-<script>try{{document.documentElement.dataset.theme=localStorage.getItem("hoolee-theme")||"dark"}}catch(e){{}}</script>
+<script>try{{document.documentElement.dataset.theme=localStorage.getItem("arcoai-theme")||"dark"}}catch(e){{}}</script>
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="hoolee">
+<meta property="og:site_name" content="ARCOAI">
 <meta property="og:title" content="{esc(plain(title))}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url(lang, route, True)}">
@@ -150,7 +150,7 @@ def head(lang: str, route: str, title: str, desc: str, jsonld: list, noindex: bo
 <meta property="og:image" content="{DOMAIN}/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="hoolee — Custom software &amp; business automation">
+<meta property="og:image:alt" content="ARCOAI — Custom software &amp; business automation">
 <meta name="twitter:card" content="summary_large_image">
 {ver}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -174,7 +174,7 @@ def header(lang: str, route: str) -> str:
 <a class="skip" href="#main">{esc(t["site"]["skip"])}</a>
 <div class="glow" aria-hidden="true"></div>
 <header class="hdr" id="hdr">
-  <a class="brand" href="{url(lang, 'home')}" aria-label="hoolee">{logo_svg()}<span>hoolee</span></a>
+  <a class="brand" href="{url(lang, 'home')}" aria-label="ARCOAI">{logo_svg()}<span>ARCOAI</span></a>
   <nav class="nav" id="nav" aria-label="{esc(STUDIO[lang]["nav"])}">{nav}</nav>
   <div class="hdr-r">
     <div class="langs" role="group" aria-label="{esc(STUDIO[lang]["language"])}">{langs}</div>
@@ -195,13 +195,13 @@ def footer(lang: str) -> str:
     return f"""<footer class="ftr">
   <div class="wrap ftr-in">
     <div class="ftr-brand">
-      <a class="brand big" href="{url(lang, 'home')}">{logo_svg()}<span>hoolee</span></a>
+      <a class="brand big" href="{url(lang, 'home')}">{logo_svg()}<span>ARCOAI</span></a>
       <p>{esc(t["site"]["footer_note"])}</p>
     </div>
     <div><h4>{esc(t["footer"]["pages"])}</h4><ul>{pages}</ul></div>
     <div><h4>{esc(t["footer"]["contact"])}</h4><ul><li>{esc(t["site"]["city"])}</li>{bot}{mail}</ul></div>
   </div>
-  <div class="wrap ftr-bot"><span>© {date.today().year} hoolee</span><span>arcoai.info</span></div>
+  <div class="wrap ftr-bot"><span>© {date.today().year} ARCOAI</span><span>arcoai.info</span></div>
 </footer>
 <script src="/assets/site.js?v={ASSET_V}" defer></script>
 {metrika()}
@@ -270,7 +270,7 @@ def org_ld(lang: str) -> dict:
         "@context": "https://schema.org",
         "@type": "Organization",
         "@id": f"{DOMAIN}/#org",
-        "name": "hoolee",
+        "name": "ARCOAI",
         "url": f"{DOMAIN}/",
         "description": t["site"]["tagline"],
         "logo": f"{DOMAIN}/assets/logo.svg",
@@ -287,7 +287,7 @@ def org_ld(lang: str) -> dict:
 
 
 def website_ld(lang: str) -> dict:
-    return {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{DOMAIN}/#site", "url": f"{DOMAIN}/", "name": "hoolee", "inLanguage": lang, "publisher": {"@id": f"{DOMAIN}/#org"}}
+    return {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{DOMAIN}/#site", "url": f"{DOMAIN}/", "name": "ARCOAI", "inLanguage": lang, "publisher": {"@id": f"{DOMAIN}/#org"}}
 
 
 def page_hero(kicker: str, h1: str, lead: str, extra: str = "") -> str:
@@ -304,7 +304,7 @@ def page_hero(kicker: str, h1: str, lead: str, extra: str = "") -> str:
 # ───────────── страницы ─────────────
 def workflow(lang: str) -> str:
     labels = STUDIO[lang]["diagram"]
-    nodes = "".join(f'<div class="flow-node flow-{i}"><span class="flow-icon">{["↗", "h", "✓", "↗"][i]}</span><div><strong>{esc(labels[1+i*2])}</strong><small>{esc(labels[2+i*2])}</small></div><span class="flow-dot"></span></div>' for i in range(4))
+    nodes = "".join(f'<div class="flow-node flow-{i}"><span class="flow-icon">{["↗", "A", "✓", "↗"][i]}</span><div><strong>{esc(labels[1+i*2])}</strong><small>{esc(labels[2+i*2])}</small></div><span class="flow-dot"></span></div>' for i in range(4))
     return f'<div class="workflow"><div class="flow-heading"><span>{esc(labels[0])}</span><span>01 — 04</span></div><div class="flow-nodes">{nodes}</div><div class="flow-footer"><span>INPUT → SYSTEM → OUTPUT</span>{logo_svg()}</div></div>'
 
 
@@ -408,7 +408,7 @@ def page_services(lang: str):
 </main>"""
     ld = [
         org_ld(lang),
-        breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["services"], "services")]),
+        breadcrumbs(lang, [("ARCOAI", "home"), (t["nav"]["services"], "services")]),
         {
             "@context": "https://schema.org",
             "@type": "ItemList",
@@ -433,7 +433,7 @@ def page_cases(lang: str):
 <section class="sec tight"><div class="wrap grid2">{cards}</div></section>
 {cta_band(lang)}
 </main>"""
-    ld = [org_ld(lang), breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["cases"], "cases")])]
+    ld = [org_ld(lang), breadcrumbs(lang, [("ARCOAI", "home"), (t["nav"]["cases"], "cases")])]
     return body, ld, "cases"
 
 
@@ -475,7 +475,7 @@ def page_ark(lang: str):
 </main>"""
     ld = [
         org_ld(lang),
-        breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["cases"], "cases"), (a["name"], "ark")]),
+        breadcrumbs(lang, [("ARCOAI", "home"), (t["nav"]["cases"], "cases"), (a["name"], "ark")]),
         {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": a["name"], "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "description": a["description"], "inLanguage": lang, "creator": {"@id": f"{DOMAIN}/#org"}},
     ]
     return body, ld, "ark"
@@ -503,7 +503,7 @@ def page_anton(lang: str):
 </main>"""
     ld = [
         org_ld(lang),
-        breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["cases"], "cases"), (a["name"], "anton")]),
+        breadcrumbs(lang, [("ARCOAI", "home"), (t["nav"]["cases"], "cases"), (a["name"], "anton")]),
         {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": a["name"], "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "description": a["description"], "inLanguage": lang, "creator": {"@id": f"{DOMAIN}/#org"}},
     ]
     return body, ld, "anton"
@@ -549,7 +549,7 @@ def page_about(lang: str):
 </main>"""
     ld = [
         org_ld(lang),
-        breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["about"], "about")]),
+        breadcrumbs(lang, [("ARCOAI", "home"), (t["nav"]["about"], "about")]),
         *[{"@context": "https://schema.org", "@type": "Person", "name": m["name"], "jobTitle": m["role"], "image": f"{DOMAIN}/assets/{TEAM_PHOTOS[m['key']]}", "worksFor": {"@id": f"{DOMAIN}/#org"}} for m in a["team"]],
     ]
     return body, ld, "about"
@@ -569,7 +569,7 @@ def page_contact(lang: str):
   {form(lang, 'contact')}
 </div></section>
 </main>"""
-    ld = [org_ld(lang), breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["contact"], "contact")]), {"@context": "https://schema.org", "@type": "ContactPage", "url": url(lang, "contact", True), "inLanguage": lang}]
+    ld = [org_ld(lang), breadcrumbs(lang, [("ARCOAI", "home"), (t["nav"]["contact"], "contact")]), {"@context": "https://schema.org", "@type": "ContactPage", "url": url(lang, "contact", True), "inLanguage": lang}]
     return body, ld, "contact"
 
 
@@ -609,7 +609,7 @@ def build() -> None:
     nf = "".join(f'<p><a class="link" href="/{l}/">{esc(T[l]["not_found"]["text"])}</a></p>' for l in LANGS)
     write(
         DIST / "404.html",
-        head("en", "home", "404 — hoolee", "Not found", [], noindex=True)
+        head("en", "home", "404 — ARCOAI", "Not found", [], noindex=True)
         + header("en", "home")
         + f'<main id="main"><section class="phero"><div class="wrap"><h1 class="h1">404</h1>{nf}</div></section></main>'
         + footer("en"),
@@ -643,11 +643,11 @@ def build() -> None:
 def llms_txt() -> str:
     en = T["en"]
     lines = [
-        "# hoolee",
+        "# ARCOAI",
         "",
         f"> {en['site']['tagline']}. {en['home']['description']}",
         "",
-        "hoolee is a software studio based in Tashkent, Uzbekistan. We work with businesses in Uzbekistan and speak Uzbek, Russian and English.",
+        "ARCOAI is a software studio based in Tashkent, Uzbekistan. We work with businesses in Uzbekistan and speak Uzbek, Russian and English.",
         "",
         "## Services",
     ]
@@ -670,6 +670,6 @@ if __name__ == "__main__":
     import fcntl
     import tempfile
     lock_name = hashlib.sha256(str(ROOT).encode()).hexdigest()[:16]
-    with open(Path(tempfile.gettempdir()) / f"hoolee-build-{lock_name}.lock", "w") as lock:
+    with open(Path(tempfile.gettempdir()) / f"arcoai-build-{lock_name}.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         build()

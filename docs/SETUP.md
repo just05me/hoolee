@@ -1,19 +1,21 @@
-# hoolee production setup
+# ARCOAI production setup
 
-## Contacts and delivery
+## Contacts and lead handling
 
-Public Telegram bot: https://t.me/hooleeuz_bot
+Public Telegram bot: https://t.me/ARCOAI_bot
 Public email: hoolee.uz@gmail.com
 
-Put BOT_TOKEN and CHAT_ID into `/opt/hoolee/.env`, permissions 600. The recipient must press Start in the bot. The API verifies Telegram success before showing success on the website. Email opens a draft in the visitor’s mail client; it is not a server SMTP delivery.
+Every lead, from the website form and from the bot dialog, is stored in SQLite (`/data/leads.db`, shared Docker volume `data`) and sent to every admin. Admins are the Telegram user ids in `ADMIN_IDS` (comma-separated); each admin must press Start in the bot once. Any admin can press "Взять в работу": the message updates for all admins and shows who took it. Admins can list recent leads with `/leads`; anyone can learn their own id with `/whoami`.
 
-After changing `.env`: `sudo docker compose up -d --force-recreate api` from `/opt/hoolee`.
+Put `BOT_TOKEN` and `ADMIN_IDS` into `/opt/hoolee/.env`, permissions 600. The API answers success only when at least one admin actually received the lead; the lead stays in the database either way.
+
+After changing `.env`: `sudo docker compose up -d --force-recreate api bot` from `/opt/hoolee`.
 Never log, commit or expose `.env`. The Docker context explicitly excludes it.
 
 ## Hosting
 
-Existing EC2: 3.70.84.61. Dedicated Compose project `hoolee` in `/opt/hoolee`.
-Host-only ports: site 4321, lead API 8788, Ark demo 8787.
+Existing EC2: 3.70.84.61. Dedicated Compose project `ARCOAI` in `/opt/ARCOAI`.
+Host-only ports: site 4321, lead API 8788, Ark demo 8787. The bot uses long polling and opens no port.
 Caddy imports `/etc/caddy/sites-enabled/hoolee.caddy`; existing domains keep their own configuration.
 
 DNS (aHOST zone editor, nameservers rdns1/2/3.ahost.uz). Required records, TTL 14400:

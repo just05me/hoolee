@@ -1,4 +1,4 @@
-# Всё hoolee — один compose, отдельные сервисы. Наружу открыты только 127.0.0.1-порты,
+# Всё ARCOAI — один compose, отдельные сервисы. Наружу открыты только 127.0.0.1-порты,
 # дальше их проксирует Caddy на хосте (см. deploy/Caddyfile.snippet).
 name: hoolee
 
@@ -31,8 +31,26 @@ services:
       driver: json-file
       options: { max-size: "5m", max-file: "2" }
     env_file: .env
-    environment: { PORT: "8788" }
+    environment: { PORT: "8788", DB_PATH: /data/leads.db }
+    volumes: [data:/data]
     ports: ["127.0.0.1:8788:8788"]
+    networks: [web]
+
+  bot:             # Telegram-бот @ARCOAI_bot: приём заявок, рассылка админам (long polling, портов нет)
+    build:
+      context: .
+      dockerfile: docker/python.Dockerfile
+      args: { SERVICE: bot }
+    restart: unless-stopped
+    mem_limit: 128m
+    pids_limit: 64
+    security_opt: ["no-new-privileges:true"]
+    logging:
+      driver: json-file
+      options: { max-size: "5m", max-file: "2" }
+    env_file: .env
+    environment: { DB_PATH: /data/leads.db }
+    volumes: [data:/data]
     networks: [web]
 
   demo-ark:        # демо Ark Core, без внешних API
@@ -52,6 +70,9 @@ services:
     networks: [web]
 
   # anton:         # добавим, когда решим, как показывать Anton (сейчас только страница-кейс)
+
+volumes:
+  data: {}     # SQLite с заявками, общий для api и bot
 
 networks:
   web: {}

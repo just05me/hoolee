@@ -30,7 +30,7 @@
   themeButton.addEventListener('click', () => {
     const theme = root.dataset.theme === 'light' ? 'dark' : 'light';
     setTheme(theme);
-    try { localStorage.setItem('hoolee-theme', theme); } catch (_) {}
+    try { localStorage.setItem('arcoai-theme', theme); } catch (_) {}
   });
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {

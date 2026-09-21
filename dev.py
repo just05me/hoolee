@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Локальный запуск всего hoolee одной командой:  python3 dev.py
+"""Локальный запуск всего ARCOAI одной командой:  python3 dev.py
 
   сайт        http://127.0.0.1:4321   (пересобирается при изменениях в site/)
   api заявок  http://127.0.0.1:8788   (проксируется на сайте как /api/*)
@@ -110,7 +110,7 @@ def main() -> None:
     ]
     threading.Thread(target=watch, daemon=True).start()
     srv = ThreadingHTTPServer(("127.0.0.1", SITE_PORT), Handler)
-    print(f"\n  hoolee · http://127.0.0.1:{SITE_PORT}   (Ctrl+C — остановить)\n")
+    print(f"\n  ARCOAI · http://127.0.0.1:{SITE_PORT}   (Ctrl+C — остановить)\n")
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

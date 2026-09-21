@@ -28,8 +28,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  assert.equal(await p.locator('[name="name"]').inputValue(),'QA');
  await p.unroute('**/api/lead');await p.route('**/api/lead',r=>r.fulfill({status:200,contentType:'application/json',body:'{"ok":true}'}));
  await p.locator('[data-send="telegram"]').click();await p.locator('.status.ok').waitFor();assert.equal(await p.locator('[name="name"]').inputValue(),'');
- await p.goto(BASE+'/ru/');await p.screenshot({path:'/tmp/hoolee-light-mobile.png'});
+ await p.goto(BASE+'/ru/');await p.screenshot({path:'/tmp/ARCOAI-light-mobile.png'});
  const nojs=await b.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});const q=await nojs.newPage();await q.goto(BASE+'/ru/');assert.ok(await q.locator('h1').isVisible());assert.ok(await q.locator('.nav').isVisible());assert.ok(!await q.locator('[data-send="telegram"]').isVisible());
- await p.locator('.theme-btn').click();await p.setViewportSize({width:1440,height:1000});await p.reload();await p.screenshot({path:'/tmp/hoolee-final-desktop.png'});
+ await p.locator('.theme-btn').click();await p.setViewportSize({width:1440,height:1000});await p.reload();await p.screenshot({path:'/tmp/ARCOAI-final-desktop.png'});
  assert.deepEqual(errors,[]);console.log(`PASS: ${count} page/viewport checks; mobile menu, theme persistence, form validation/failure/success, no-JS, no JS errors.`);await b.close();
 })().catch(e=>{console.error(e);process.exit(1)})

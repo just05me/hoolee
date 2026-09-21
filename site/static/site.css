@@ -149,7 +149,7 @@ em {
   gap:9px;
   font-size:25px;
   font-weight:720;
-  letter-spacing:-1px;
+  letter-spacing:.02em;
 }
 
 .logo-mark {
