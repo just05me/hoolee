@@ -1,18 +1,32 @@
-# Добавить в /etc/caddy/Caddyfile на сервере (блок ffinance.uz не трогать), затем: sudo systemctl reload caddy
-hoolee.uz, www.hoolee.uz {
-	encode zstd gzip
-	@www host www.hoolee.uz
-	redir @www https://hoolee.uz{uri} permanent
-
-	handle /api/* {
-		reverse_proxy 127.0.0.1:8788
-	}
-	handle {
-		reverse_proxy 127.0.0.1:4321
-	}
+# Imported by the existing host Caddy. Other sites are managed separately.
+arcoai.info, www.arcoai.info {
+    encode zstd gzip
+    @www host www.arcoai.info
+    redir @www https://arcoai.info{uri} permanent
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        X-Frame-Options SAMEORIGIN
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+    request_body {
+        max_size 10KB
+    }
+    handle /api/* {
+        reverse_proxy 127.0.0.1:8788
+    }
+    handle {
+        reverse_proxy 127.0.0.1:4321
+    }
 }
 
-demo.hoolee.uz {
-	encode zstd gzip
-	reverse_proxy 127.0.0.1:8787
+demo.arcoai.info {
+    encode zstd gzip
+    header X-Robots-Tag "noindex, nofollow"
+    header X-Content-Type-Options nosniff
+    header Content-Security-Policy "frame-ancestors https://arcoai.info https://www.arcoai.info"
+    request_body {
+        max_size 10KB
+    }
+    reverse_proxy 127.0.0.1:8787
 }

@@ -93,14 +93,14 @@ T["ru"] = {
         {"n": "04", "title": "Поддержка", "text": "Следим за работой, исправляем, добавляем новые сценарии по мере роста."},
     ],
     "principles": [
-        {"title": "Человек в контуре", "text": "Агент готовит и проверяет, но важные действия подтверждает человек. Так ИИ не совершает необратимых ошибок."},
+        {"title": "Человек в контуре", "text": "Агент готовит и проверяет, но важные действия подтверждает человек. Это снижает риск необратимых ошибок."},
         {"title": "Ваши данные у вас", "text": "Можем развернуть систему на вашем сервере и подключить локальную языковую модель, чтобы данные не покидали компанию."},
         {"title": "Прозрачная стоимость", "text": "Понятные этапы и результат в каждом из них. Видно, за что вы платите и что получили."},
         {"title": "Без магии", "text": "Показываем, как система принимает решения: журнал, роли, стоимость каждого шага."},
     ],
     "faq": [
         {"q": "Что такое ИИ-оркестратор?", "a": "Это система, которая получает задачу и распределяет её между несколькими ИИ-агентами с разными ролями: один планирует, другие выполняют, третий проверяет результат. Важные шаги подтверждает человек. Так можно автоматизировать работу, которая не сводится к одному шаблону."},
-        {"q": "С каких компаний в Ташкенте и Узбекистане вы работаете?", "a": "Мы делаем системы для малого и среднего бизнеса: торговля, логистика, клиники, HoReCa, производство. Работаем из Ташкента, проекты ведём на русском и узбекском языках, при необходимости на английском."},
+        {"q": "С какими компаниями в Ташкенте и Узбекистане вы работаете?", "a": "Мы делаем системы для малого и среднего бизнеса: торговля, логистика, клиники, HoReCa, производство. Работаем из Ташкента, проекты ведём на русском и узбекском языках, при необходимости на английском."},
         {"q": "Сколько стоит автоматизация?", "a": "Зависит от процесса. Мы начинаем с короткого аудита, после которого называем объём работ и стоимость по этапам. Оставьте заявку, и мы обсудим вашу задачу."},
         {"q": "Можно ли обойтись без внешних ИИ-сервисов?", "a": "Да. Систему можно развернуть на вашем сервере и подключить локальную языковую модель. Это дороже по железу, но данные не уходят за пределы компании."},
         {"q": "Как быстро можно получить первый результат?", "a": "Рабочий прототип на ваших данных мы обычно показываем после аудита, ещё до полной разработки. Точные сроки зависят от процесса и количества интеграций."},
@@ -178,11 +178,11 @@ T["ru"] = {
             "Мы не продаём «ИИ ради ИИ». Сначала понимаем процесс, потом выбираем инструмент: где-то хватит обычного скрипта, где-то нужна цепочка агентов.",
             "Свои идеи мы проверяем на собственных продуктах, поэтому знаем, где системы ломаются на практике.",
         ],
-        "founder_title": "Основатель",
-        "founder_name": "Muhammadrizo Abdurazzoqov",
-        "founder_role": "Software Engineer / ML Engineering / Data Science",
-        "founder_text": "Проектирует системы из ИИ-агентов и отвечает за архитектуру каждого проекта студии.",
-        "founder_photo": "Фото скоро",
+        "team_title": "Команда",
+        "team": [
+            {"key": "rizo", "name": "Muhammadrizo Abdurazzoqov", "role": "Сооснователь · Разработчик и проектировщик", "text": "Проектирует системы из ИИ-агентов и отвечает за архитектуру каждого проекта студии."},
+            {"key": "bairas", "name": "Bairas Azamatov", "role": "Сооснователь · Project Manager · Senior Community Manager", "text": "Ведёт проекты студии, отвечает за коммуникацию с клиентами и развитие сообщества."},
+        ],
         "values_title": "Чем мы занимаемся",
         "values": ["Автоматизация процессов", "ИИ-оркестраторы", "Разработка систем", "Внедрение и поддержка"],
     },
@@ -300,7 +300,7 @@ T["en"] = {
         {"n": "04", "title": "Support", "text": "We watch it run, fix issues and add new scenarios as you grow."},
     ],
     "principles": [
-        {"title": "Human in the loop", "text": "An agent prepares and checks, but important actions are confirmed by a person. AI never makes irreversible mistakes on its own."},
+        {"title": "Human in the loop", "text": "An agent prepares and checks, but important actions are confirmed by a person. This reduces the risk of irreversible mistakes."},
         {"title": "Your data stays yours", "text": "We can deploy the system on your server with a local language model so data never leaves the company."},
         {"title": "Transparent pricing", "text": "Clear stages with a result in each one. You see what you pay for and what you received."},
         {"title": "No magic", "text": "We show how the system decides: log, roles and the cost of every step."},
@@ -385,11 +385,11 @@ T["en"] = {
             "We do not sell “AI for the sake of AI”. We understand the process first, then pick the tool: sometimes a plain script is enough, sometimes you need a chain of agents.",
             "We test our ideas on products of our own, so we know where systems break in practice.",
         ],
-        "founder_title": "Founder",
-        "founder_name": "Muhammadrizo Abdurazzoqov",
-        "founder_role": "Software Engineer / ML Engineering / Data Science",
-        "founder_text": "Designs AI agent systems and is responsible for the architecture of every studio project.",
-        "founder_photo": "Photo soon",
+        "team_title": "Team",
+        "team": [
+            {"key": "rizo", "name": "Muhammadrizo Abdurazzoqov", "role": "Co-founder · Developer & System Designer", "text": "Designs AI agent systems and is responsible for the architecture of every studio project."},
+            {"key": "bairas", "name": "Bairas Azamatov", "role": "Co-founder · Project Manager · Senior Community Manager", "text": "Runs studio projects and is responsible for client communication and community growth."},
+        ],
         "values_title": "What we do",
         "values": ["Process automation", "AI orchestrators", "Systems development", "Rollout and support"],
     },
@@ -507,7 +507,7 @@ T["uz"] = {
         {"n": "04", "title": "Qo‘llab-quvvatlash", "text": "Ishlashini kuzatamiz, xatolarni tuzatamiz va o‘sish bilan yangi stsenariylar qo‘shamiz."},
     ],
     "principles": [
-        {"title": "Aylanmada inson", "text": "Agent tayyorlaydi va tekshiradi, muhim harakatlarni esa inson tasdiqlaydi. Shunda AI qaytarib bo‘lmas xato qilmaydi."},
+        {"title": "Aylanmada inson", "text": "Agent tayyorlaydi va tekshiradi, muhim harakatlarni esa inson tasdiqlaydi. Bu qaytarib bo‘lmaydigan xatolar xavfini kamaytiradi."},
         {"title": "Ma’lumot sizda qoladi", "text": "Tizimni sizning serveringizda lokal til modeli bilan joylashtira olamiz, ma’lumotlar kompaniyadan chiqmaydi."},
         {"title": "Shaffof narx", "text": "Har bir bosqichda natija bor. Nima uchun to‘layotganingiz va nima olganingiz ko‘rinib turadi."},
         {"title": "Sehrsiz", "text": "Tizim qaror qanday qabul qilishini ko‘rsatamiz: jurnal, rollar va har bir qadam narxi."},
@@ -592,11 +592,11 @@ T["uz"] = {
             "Biz “AI uchun AI” sotmaymiz. Avval jarayonni tushunamiz, keyin vositani tanlaymiz: ba’zan oddiy skript yetadi, ba’zan agentlar zanjiri kerak.",
             "G‘oyalarimizni o‘z mahsulotlarimizda sinaymiz, shuning uchun tizimlar amalda qayerda buzilishini bilamiz.",
         ],
-        "founder_title": "Asoschi",
-        "founder_name": "Muhammadrizo Abdurazzoqov",
-        "founder_role": "Software Engineer / ML Engineering / Data Science",
-        "founder_text": "AI agent tizimlarini loyihalaydi va studiyaning har bir loyihasi arxitekturasi uchun javob beradi.",
-        "founder_photo": "Surat tez orada",
+        "team_title": "Jamoa",
+        "team": [
+            {"key": "rizo", "name": "Muhammadrizo Abdurazzoqov", "role": "Hammuassis · Dasturchi va loyihachi", "text": "AI agent tizimlarini loyihalaydi va studiyaning har bir loyihasi arxitekturasi uchun javob beradi."},
+            {"key": "bairas", "name": "Bairas Azamatov", "role": "Hammuassis · Project Manager · Senior Community Manager", "text": "Studiya loyihalarini boshqaradi, mijozlar bilan aloqa va hamjamiyat rivojiga javob beradi."},
+        ],
         "values_title": "Nima bilan shug‘ullanamiz",
         "values": ["Jarayonlarni avtomatlashtirish", "AI orkestratorlar", "Tizimlar ishlab chiqish", "Joriy etish va qo‘llab-quvvatlash"],
     },
@@ -628,3 +628,64 @@ T["uz"] = {
     "footer": {"pages": "Sahifalar", "contact": "Aloqa", "rights": "Barcha huquqlar himoyalangan"},
     "not_found": {"title": "Sahifa topilmadi", "text": "Bunday sahifa yo‘q. Bosh sahifaga qayting.", "home": "Bosh sahifa"},
 }
+
+
+# Studio positioning and contact flow, kept together across all three locales.
+STUDIO = {
+    "ru": {
+        "h1": ["Меньше рутины.", "{Больше бизнеса.}"],
+        "lead": "Разрабатываем системы под процессы вашей компании. Связываем CRM, мессенджеры и данные, внедряем ИИ там, где он полезен. От первого прототипа до поддержки.",
+        "services_title": "Ваша работа. На автомате.",
+        "cases_title": "От идеи до работающего кода.",
+        "cases_lead": "Наши собственные разработки: интерактивный прототип Ark Core и экспериментальная платформа Anton. Познакомьтесь с подходом до начала проекта.",
+        "diagram": ["Пример процесса", "Заявка клиента", "Telegram · сайт · CRM", "hoolee", "Проверка и маршрутизация", "Решение человека", "Важные действия под контролем", "Готовый результат", "CRM · документы · уведомления"],
+        "proof": ["Разработка под ваши процессы", "Интеграция с вашими системами", "Внедрение и поддержка"],
+        "project_status": ["Интерактивный прототип", "Собственная разработка · Alpha"],
+        "send": "Продолжить в Telegram", "hint": "Откроется чат с подготовленным текстом. Проверьте его и нажмите «Отправить» в Telegram. До этого форма ничего не отправляет.",
+        "draft": "Текст подготовлен. Отправьте его в открывшемся чате Telegram.",
+        "privacy": "Используем указанные контакты только для обсуждения вашей задачи. Не добавляйте пароли, ключи и конфиденциальные данные.",
+        "theme": "Сменить тему", "nav": "Основная навигация", "language": "Язык", "portfolio": "Портфолио основателя", "contact_note": "Обсудим процесс, ограничения и ожидаемый результат. После знакомства предложим объём работ и следующие шаги.",
+    },
+    "uz": {
+        "h1": ["Kamroq odatiy ish.", "{Ko‘proq imkoniyat.}"],
+        "lead": "Kompaniyangiz jarayonlariga mos tizimlar yaratamiz. CRM, messenjerlar va ma’lumotlarni birlashtiramiz, foyda keltiradigan joyda sun’iy intellektni qo‘llaymiz. Prototipdan texnik yordamgacha.",
+        "services_title": "Ish jarayonlaringiz. Avtomatik.",
+        "cases_title": "G‘oyadan ishlaydigan tizimgacha.",
+        "cases_lead": "O‘z ishlanmalarimiz: Ark Core interaktiv prototipi va Anton eksperimental platformasi. Loyihani boshlashdan avval yondashuvimiz bilan tanishing.",
+        "diagram": ["Jarayon namunasi", "Mijoz so‘rovi", "Telegram · sayt · CRM", "hoolee", "Tekshirish va yo‘naltirish", "Inson qarori", "Muhim amallar nazorat ostida", "Tayyor natija", "CRM · hujjatlar · bildirishnomalar"],
+        "proof": ["Jarayonlaringizga mos yechim", "Tizimlaringiz bilan integratsiya", "Joriy etish va texnik yordam"],
+        "project_status": ["Interaktiv prototip", "O‘z ishlanmamiz · Alpha"],
+        "send": "Telegramda davom etish", "hint": "Tayyor matn bilan chat ochiladi. Uni tekshirib, Telegramda «Yuborish»ni bosing. Ungacha shakl hech narsa yubormaydi.",
+        "draft": "Matn tayyor. Uni ochilgan Telegram chatida yuboring.",
+        "privacy": "Kontaktlaringizdan faqat loyihangizni muhokama qilish uchun foydalanamiz. Parollar, kalitlar yoki maxfiy ma’lumotlarni kiritmang.",
+        "theme": "Mavzuni almashtirish", "nav": "Asosiy navigatsiya", "language": "Til", "portfolio": "Asoschining portfoliosi", "contact_note": "Jarayon, cheklovlar va kutilgan natijani muhokama qilamiz. Tanishuvdan so‘ng ish hajmi va keyingi qadamlarni taklif qilamiz.",
+    },
+    "en": {
+        "h1": ["Less busywork.", "{More business.}"],
+        "lead": "Custom software built around the way you work. We connect your CRM, messaging and data, and put AI where it helps. From the first prototype to ongoing support.",
+        "services_title": "Your workflow. On autopilot.",
+        "cases_title": "Ideas, turned into working systems.",
+        "cases_lead": "Our own R&D: the interactive Ark Core prototype and the experimental Anton platform. Explore our approach before starting a project.",
+        "diagram": ["Example workflow", "Customer request", "Telegram · website · CRM", "hoolee", "Validation and routing", "Human decision", "Important actions stay in your hands", "Work delivered", "CRM · documents · notifications"],
+        "proof": ["Built around your processes", "Connected to your systems", "Deployment and support"],
+        "project_status": ["Interactive prototype", "In-house project · Alpha"],
+        "send": "Continue in Telegram", "hint": "A chat opens with your draft. Review it and press Send in Telegram. This form sends nothing before that.",
+        "draft": "Your draft is ready. Send it in the Telegram chat that opened.",
+        "privacy": "We use your contact details only to discuss your project. Do not include passwords, API keys or confidential data.",
+        "theme": "Change appearance", "nav": "Main navigation", "language": "Language", "portfolio": "Founder’s portfolio", "contact_note": "We’ll discuss your process, constraints and expected outcome, then propose a scope of work and next steps.",
+    },
+}
+for language, studio in STUDIO.items():
+    for key in ("h1", "lead", "services_title", "cases_title", "cases_lead"):
+        T[language]["home"][key] = studio[key]
+    T[language]["form"]["telegram"] = studio["send"]
+    T[language]["form"]["step2_hint"] = studio["hint"]
+    T[language]["form"]["step2"] = ""
+
+for lang, label, hint in [
+    ("ru", "Отправить заявку", "Заявка поступит команде студии в Telegram. Мы ответим по указанному контакту."),
+    ("uz", "So‘rov yuborish", "So‘rovingiz Telegram orqali studiya jamoasiga yetkaziladi. Ko‘rsatilgan kontakt orqali javob beramiz."),
+    ("en", "Send inquiry", "Your inquiry is delivered to our team in Telegram. We’ll reply using the contact you provide."),
+]:
+    T[lang]["form"]["telegram"] = label
+    T[lang]["form"]["step2_hint"] = hint

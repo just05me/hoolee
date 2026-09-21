@@ -2,7 +2,7 @@
 FROM python:3.12-alpine AS build
 WORKDIR /src
 COPY site ./site
-ARG DEMO_URL=https://demo.hoolee.uz
+ARG DEMO_URL=https://demo.arcoai.info
 ENV DEMO_URL=$DEMO_URL
 RUN python3 site/build.py
 

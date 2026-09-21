@@ -1,8 +1,7 @@
 {
-  "domain": "https://hoolee.uz",
-  "demo_url": "http://127.0.0.1:8787",
-  "email": "",
-  "bot_username": "",
+  "domain": "https://arcoai.info",
+  "demo_url": "https://demo.arcoai.info",
+  "email": "hoolee.uz@gmail.com",
   "api_path": "/api/lead",
   "verification": {
     "google": "",
@@ -10,5 +9,6 @@
   },
   "analytics": {
     "yandex_metrika_id": ""
-  }
+  },
+  "telegram_username": "hooleeuz_bot"
 }

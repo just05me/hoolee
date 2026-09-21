@@ -1,61 +1,49 @@
-# Настройка hoolee
+# hoolee production setup
 
-## 1. Telegram-бот для заявок
+## Contacts and delivery
 
-1. В Telegram откройте **@BotFather** → `/newbot` → придумайте имя и username (должен заканчиваться на `bot`).
-2. BotFather пришлёт **токен**. Положите его в `.env` (`BOT_TOKEN=...`). Токен никому не показывайте и не коммитьте.
-3. Откройте своего бота, нажмите **Start** и отправьте любое сообщение.
-4. Узнайте свой chat id:
-   ```bash
-   cd services/api && BOT_TOKEN=... python3 server.py --chat-id
-   ```
-   Вывод `CHAT_ID=123456789` тоже положите в `.env`.
-5. Впишите username бота (без `@`) в `site/config.json` → `bot_username`, чтобы он появился в контактах и футере.
-6. Проверка: `python3 dev.py`, отправьте заявку с сайта. Она придёт в чат с ботом.
+Public Telegram bot: https://t.me/hooleeuz_bot
+Public email: hoolee.uz@gmail.com
 
-## 2. Email в форме
+Put BOT_TOKEN and CHAT_ID into `/opt/hoolee/.env`, permissions 600. The recipient must press Start in the bot. The API verifies Telegram success before showing success on the website. Email opens a draft in the visitor’s mail client; it is not a server SMTP delivery.
 
-Когда заведёте почту, впишите адрес в `site/config.json` → `"email"`. В форме появится кнопка «Отправить по email»:
-она открывает почтовую программу посетителя с готовым письмом на этот адрес (`mailto:`).
-Отправку с самого сервера (SMTP/Resend) можно добавить позже, это потребует SPF/DKIM для hoolee.uz в DNS.
+After changing `.env`: `sudo docker compose up -d --force-recreate api` from `/opt/hoolee`.
+Never log, commit or expose `.env`. The Docker context explicitly excludes it.
 
-## 3. Google Search Console
+## Hosting
 
-1. https://search.google.com/search-console → **Добавить ресурс** → тип **Домен** → `hoolee.uz`.
-2. Google покажет TXT-запись. Добавьте её в DNS домена (кабинет aHOST: https://clients.ahost.uz) и нажмите «Подтвердить».
-3. Раздел **Файлы Sitemap** → добавьте `https://hoolee.uz/sitemap.xml`.
-4. Раздел **Проверка URL** → вставьте `https://hoolee.uz/uz/` → **Запросить индексирование** (то же для `/ru/` и `/en/`).
+Existing EC2: 3.70.84.61. Dedicated Compose project `hoolee` in `/opt/hoolee`.
+Host-only ports: site 4321, lead API 8788, Ark demo 8787.
+Caddy imports `/etc/caddy/sites-enabled/hoolee.caddy`; existing domains keep their own configuration.
 
-Если выберете тип «Префикс URL», можно подтвердить через мета-тег: впишите его значение в `site/config.json` → `verification.google`.
+DNS (aHOST zone editor, nameservers rdns1/2/3.ahost.uz). Required records, TTL 14400:
 
-## 4. Яндекс.Вебмастер
+| Name | Type | Value |
+| --- | --- | --- |
+| `@` | A | `3.70.84.61` |
+| `www` | CNAME | `arcoai.info` |
+| `demo` | A | `3.70.84.61` |
 
-1. https://webmaster.yandex.ru → **Добавить сайт** → `https://hoolee.uz`.
-2. Подтверждение через мета-тег: значение `content` впишите в `site/config.json` → `verification.yandex`, пересоберите и выложите сайт, затем нажмите «Проверить».
-3. **Индексирование → Файлы Sitemap** → `https://hoolee.uz/sitemap.xml`.
-4. **Региональность**: Ташкент / Узбекистан.
+Remove the registrar defaults that point to the old hosting IP `185.196.212.52`: the old `@` A record, `mail` and `ftp` CNAMEs, the `@` MX record, and update the SPF TXT. Caddy obtains HTTPS once the names resolve publicly.
 
-## 5. Яндекс.Метрика
+Deploy source with rsync excluding `.git`, `.env*`, `anton`, `dist`, and `__pycache__`. Copy `.env` separately through SSH only when updating secrets. Run `sudo docker compose up --build -d`. Validate Caddy before reloading. Keep the prior source release for rollback.
 
-1. https://metrica.yandex.com → **Добавить счётчик** → адрес `hoolee.uz`.
-2. Скопируйте **номер счётчика** (цифры) в `site/config.json` → `analytics.yandex_metrika_id`.
-3. Пересоберите и выложите сайт. Счётчик подключается сам на всех страницах.
-4. В Метрике включите Вебвизор, если он нужен (по умолчанию у нас включены карта кликов и отслеживание ссылок).
+Checks:
 
-## 6. GEO (видимость в ИИ-поиске)
+```sh
+curl -I https://arcoai.info/ru/
+curl https://arcoai.info/api/health
+curl https://demo.arcoai.info/api/health
+curl -I https://arcoai.info/not-found
+```
 
-Уже сделано в сборке: `robots.txt` разрешает ИИ-краулеры (GPTBot, ClaudeBot, PerplexityBot и др.), есть `llms.txt`,
-JSON-LD (Organization, FAQPage, Service, BreadcrumbList), `hreflang` для uz/ru/en и sitemap.
-Дальше поможет: регулярно добавлять страницы с ответами на вопросы клиентов (блог/FAQ) и упоминания hoolee на внешних площадках.
+`www` redirects to apex. `/` redirects to `/uz/`; each language has a stable URL. Unknown pages return 404. The demo is noindex.
 
-## 7. Выкладка на сервер (когда будете готовы; сейчас ничего не выкладывалось)
+## Search
 
-Сервер: EC2 `mindmap-prod`, там же ffinance.uz. Порядок:
+The site ships canonical URLs, reciprocal hreflang for uz/ru/en/x-default, a sitemap with 21 pages, descriptive metadata, Organization/Service/Breadcrumb/FAQ structured data and a 1200×630 social image. Primary text and links work without JavaScript. There are no invented ratings, client results or dates.
 
-1. **DNS в aHOST** для `hoolee.uz`: `A @ → 3.70.84.61`, `A www → 3.70.84.61`, `A demo → 3.70.84.61`.
-2. Скопировать проект на сервер (например `rsync` в `/opt/hoolee`, исключая `.git`, `anton`, `dist`, `.env`).
-3. На сервере: `cp .env.example .env`, заполнить, затем `sudo docker compose up --build -d`.
-4. Добавить блоки из `deploy/Caddyfile.snippet` в `/etc/caddy/Caddyfile` (блок ffinance.uz не трогать) и `sudo systemctl reload caddy`. Caddy сам выпустит HTTPS.
-5. Проверка: `https://hoolee.uz/ru/`, `https://demo.hoolee.uz`, отправка тестовой заявки.
+Verify `arcoai.info` in Google Search Console with a DNS TXT record, submit `https://arcoai.info/sitemap.xml`, then inspect the language home pages. Optionally verify Yandex Webmaster and configure Tashkent as the region. Verification tokens and the optional Yandex Metrika counter are in `site/config.json`; no counter is installed until a real ID is provided.
 
-Замечание: на сервере 2 ГБ памяти, а ffinance.uz уже занимает часть. Наш стек лёгкий (nginx + два маленьких Python-процесса), но следите за `free -m` после запуска.
+GEO relies on the same accessible, useful, factual content as SEO. `llms.txt` is supplementary and does not guarantee AI citations or indexing. Keep case status current, add real outcomes when available, and track actual indexing in Search Console.
+Reference: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide

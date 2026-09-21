@@ -6,13 +6,11 @@ SSE-поток идёт в отдельном треде на каждый за�
 """
 from __future__ import annotations
 
-import itertools
+import uuid
 import threading
-import time
 from dataclasses import dataclass, field
 from typing import Any
 
-_counter = itertools.count(1)
 _lock = threading.Lock()
 _pending: dict[str, "Interaction"] = {}
 
@@ -33,7 +31,7 @@ class Interaction:
 
 def create(task_id: str, kind: str, payload: dict[str, Any], default_resolution: dict[str, Any]) -> Interaction:
     with _lock:
-        iid = f"int_{next(_counter)}_{int(time.time() * 1000)}"
+        iid = f"int_{uuid.uuid4().hex}"
         interaction = Interaction(iid, task_id, kind, payload, default_resolution)
         _pending[iid] = interaction
         return interaction
@@ -42,11 +40,11 @@ def create(task_id: str, kind: str, payload: dict[str, Any], default_resolution:
 def resolve(interaction_id: str, resolution: dict[str, Any]) -> bool:
     with _lock:
         interaction = _pending.get(interaction_id)
-    if not interaction or interaction.event.is_set():
-        return False
-    interaction.resolution = resolution
-    interaction.event.set()
-    return True
+        if not interaction or interaction.event.is_set():
+            return False
+        interaction.resolution = resolution
+        interaction.event.set()
+        return True
 
 
 def wait(interaction: Interaction) -> dict[str, Any]:

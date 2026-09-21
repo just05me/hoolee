@@ -54,7 +54,7 @@ class Handler(BaseHTTPRequestHandler):
         body = self.rfile.read(length) if length else None
         c = http.client.HTTPConnection("127.0.0.1", API_PORT, timeout=15)
         try:
-            c.request(self.command, self.path, body=body, headers={"Content-Type": self.headers.get("Content-Type", "application/json")})
+            c.request(self.command, self.path, body=body, headers={"Content-Type": self.headers.get("Content-Type", "application/json"), "X-Forwarded-For": self.client_address[0]})
             r = c.getresponse()
             data = r.read()
             self.send_response(r.status)

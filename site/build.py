@@ -2,12 +2,13 @@
 """Генератор статического сайта hoolee. Только stdlib.
 
     python3 build.py            # собирает ../dist
-    DEMO_URL=https://demo.hoolee.uz python3 build.py
+    DEMO_URL=https://demo.arcoai.info python3 build.py
 
 Настройки — в config.json (домен, ссылка на демо, email, username бота, коды подтверждения).
 """
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import os
@@ -18,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
-from content import DEFAULT_LANG, LANG_NAMES, LANGS, OG_LOCALE, T  # noqa: E402
+from content import DEFAULT_LANG, LANG_NAMES, LANGS, OG_LOCALE, T, STUDIO  # noqa: E402
 
 DIST = ROOT.parent / "dist"
 CFG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
@@ -37,7 +38,7 @@ ROUTES = {
     "about": "about/",
     "contact": "contact/",
 }
-ASSET_V = date.today().strftime("%Y%m%d")
+ASSET_V = hashlib.sha256(b"".join(p.read_bytes() for p in sorted((ROOT / "static").rglob("*")) if p.is_file())).hexdigest()[:12]
 
 
 # ───────────── helpers ─────────────
@@ -66,7 +67,7 @@ def j(obj) -> str:
 
 # ───────────── SVG / визуальные блоки ─────────────
 def logo_svg() -> str:
-    return '<svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="var(--accent)"/></svg>'
+    return '<svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M9 7v26M31 7v26M9 24c0-12 22-12 22-8" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="31" cy="16" r="4" fill="var(--accent)"/></svg>'
 
 
 def arrow_svg() -> str:
@@ -74,29 +75,11 @@ def arrow_svg() -> str:
 
 
 def ark_mini_svg() -> str:
-    pts = [(40, 110), (120, 50), (120, 170), (210, 110), (300, 50), (300, 170), (380, 110)]
-    edges = [(0, 1), (0, 2), (1, 3), (2, 3), (3, 4), (3, 5), (4, 6), (5, 6)]
-    e = "".join(
-        f'<line x1="{pts[a][0]}" y1="{pts[a][1]}" x2="{pts[b][0]}" y2="{pts[b][1]}" class="ln"/>'
-        f'<circle r="3" class="pk" style="--d:{(i*0.55):.2f}s"><animateMotion dur="2.6s" begin="{(i*0.55):.2f}s" repeatCount="indefinite" path="M{pts[a][0]},{pts[a][1]} L{pts[b][0]},{pts[b][1]}"/></circle>'
-        for i, (a, b) in enumerate(edges)
-    )
-    n = "".join(f'<circle cx="{x}" cy="{y}" r="9" class="nd" style="--d:{i*0.3:.1f}s"/>' for i, (x, y) in enumerate(pts))
-    return f'<svg class="viz viz-ark" viewBox="0 0 420 220" aria-hidden="true">{e}{n}</svg>'
+    return '<img class="case-cover" src="/assets/ark-dashboard.png" width="1440" height="980" loading="lazy" decoding="async" alt="Ark Core — dashboard with departments, pipeline and activity log (demo data)">'
 
 
 def anton_mini_svg() -> str:
-    cells = []
-    import random
-
-    rnd = random.Random(7)
-    for r in range(7):
-        for c in range(14):
-            x = 20 + c * 28
-            y = 20 + r * 28
-            lvl = rnd.choice([0, 0, 1, 1, 2, 3])
-            cells.append(f'<rect x="{x}" y="{y}" width="20" height="20" rx="4" class="cell l{lvl}" style="--d:{rnd.random()*4:.2f}s"/>')
-    return f'<svg class="viz viz-anton" viewBox="0 0 420 220" aria-hidden="true">{"".join(cells)}</svg>'
+    return '<svg class="viz viz-anton" viewBox="0 0 420 220" role="img" aria-label="Anton: task, agents, review, release"><g fill="none" stroke="var(--line2)" stroke-width="1.5"><path d="M210 60v30M210 90H90v20M210 90h120v20M210 90v20M90 145v25h240v-25M210 145v40"/></g><g fill="var(--bg2)" stroke="var(--line2)"><rect x="145" y="20" width="130" height="40" rx="10"/><rect x="35" y="110" width="110" height="35" rx="9"/><rect x="155" y="110" width="110" height="35" rx="9"/><rect x="275" y="110" width="110" height="35" rx="9"/><rect x="155" y="180" width="110" height="30" rx="9"/></g><g fill="var(--fg)" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12"><text x="210" y="45">ANTON / TASK</text><text x="90" y="132">PRODUCT</text><text x="210" y="132">ENGINEERING</text><text x="330" y="132">DESIGN</text><text x="210" y="200" fill="var(--accent)">REVIEW</text></g></svg>'
 
 
 def org_svg(labels: dict) -> str:
@@ -124,7 +107,7 @@ def org_svg(labels: dict) -> str:
         bx, by = cx(b), nodes[b][1]
         my = (ay + by) / 2
         d = f"M{ax},{ay} C{ax},{my} {bx},{my} {bx},{by}"
-        paths.append(f'<path d="{d}" class="ln"/><circle r="3.2" class="pk"><animateMotion dur="2.8s" begin="{i*0.35:.2f}s" repeatCount="indefinite" path="{d}"/></circle>')
+        paths.append(f'<path d="{d}" class="ln"/>')
     boxes = []
     for i, (k, (x, y, w)) in enumerate(nodes.items()):
         cls = "nd top" if k == "dispatcher" else ("nd rev" if k in ("qa", "security", "release") else "nd")
@@ -145,7 +128,7 @@ def head(lang: str, route: str, title: str, desc: str, jsonld: list, noindex: bo
     ld = "".join(f'<script type="application/ld+json">{j(o)}</script>' for o in jsonld)
     robots = '<meta name="robots" content="noindex">' if noindex else '<meta name="robots" content="index,follow,max-image-preview:large">'
     return f"""<!doctype html>
-<html lang="{lang}" data-lang="{lang}">
+<html lang="{lang}" data-lang="{lang}" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -154,8 +137,9 @@ def head(lang: str, route: str, title: str, desc: str, jsonld: list, noindex: bo
 {robots}
 <link rel="canonical" href="{url(lang, route, True)}">
 {alts}
-<meta name="theme-color" content="#08080b">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08090b">
+<meta name="color-scheme" content="dark light">
+<script>try{{document.documentElement.dataset.theme=localStorage.getItem("hoolee-theme")||"dark"}}catch(e){{}}</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="hoolee">
 <meta property="og:title" content="{esc(plain(title))}">
@@ -164,6 +148,9 @@ def head(lang: str, route: str, title: str, desc: str, jsonld: list, noindex: bo
 <meta property="og:locale" content="{OG_LOCALE[lang]}">
 {og_alts}
 <meta property="og:image" content="{DOMAIN}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="hoolee — Custom software &amp; business automation">
 <meta name="twitter:card" content="summary_large_image">
 {ver}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -188,9 +175,10 @@ def header(lang: str, route: str) -> str:
 <div class="glow" aria-hidden="true"></div>
 <header class="hdr" id="hdr">
   <a class="brand" href="{url(lang, 'home')}" aria-label="hoolee">{logo_svg()}<span>hoolee</span></a>
-  <nav class="nav" id="nav" aria-label="Main">{nav}</nav>
+  <nav class="nav" id="nav" aria-label="{esc(STUDIO[lang]["nav"])}">{nav}</nav>
   <div class="hdr-r">
-    <div class="langs" role="group" aria-label="Language">{langs}</div>
+    <div class="langs" role="group" aria-label="{esc(STUDIO[lang]["language"])}">{langs}</div>
+    <button class="theme-btn" type="button" aria-label="{esc(STUDIO[lang]["theme"])}" title="{esc(STUDIO[lang]["theme"])}">◐</button>
     <a class="btn btn-sm hide-m" href="{url(lang, 'contact')}">{esc(t["cta"]["talk"])}{arrow_svg()}</a>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="{esc(t["site"]["menu"])}"><i></i><i></i></button>
   </div>
@@ -200,8 +188,8 @@ def header(lang: str, route: str) -> str:
 def footer(lang: str) -> str:
     t = T[lang]
     bot = ""
-    if CFG.get("bot_username"):
-        bot = f'<li><a href="https://t.me/{esc(CFG["bot_username"])}" rel="noopener" target="_blank">Telegram</a></li>'
+    if CFG.get("telegram_username"):
+        bot = f'<li><a href="https://t.me/{esc(CFG["telegram_username"])}" rel="noopener" target="_blank">Telegram</a></li>'
     mail = f'<li><a href="mailto:{esc(CFG["email"])}">{esc(CFG["email"])}</a></li>' if CFG.get("email") else ""
     pages = "".join(f'<li><a href="{url(lang, r)}">{esc(t["nav"][r])}</a></li>' for r in ("services", "cases", "about", "contact"))
     return f"""<footer class="ftr">
@@ -213,7 +201,7 @@ def footer(lang: str) -> str:
     <div><h4>{esc(t["footer"]["pages"])}</h4><ul>{pages}</ul></div>
     <div><h4>{esc(t["footer"]["contact"])}</h4><ul><li>{esc(t["site"]["city"])}</li>{bot}{mail}</ul></div>
   </div>
-  <div class="wrap ftr-bot"><span>© {date.today().year} hoolee</span><span>hoolee.uz</span></div>
+  <div class="wrap ftr-bot"><span>© {date.today().year} hoolee</span><span>arcoai.info</span></div>
 </footer>
 <script src="/assets/site.js?v={ASSET_V}" defer></script>
 {metrika()}
@@ -233,24 +221,27 @@ def form(lang: str, page: str) -> str:
     email_btn = ""
     if CFG.get("email"):
         email_btn = f'<button type="button" class="btn btn-ghost" data-send="email">{esc(f["email"])}{arrow_svg()}</button>'
-    return f"""<form class="lead" id="lead" novalidate data-api="{esc(CFG['api_path'])}" data-lang="{lang}" data-page="{esc(page)}" data-email="{esc(CFG.get('email', ''))}" data-subject="{esc(f['subject'])}"
+    nojs = {"ru": "Для отправки формы включите JavaScript или откройте бота в Telegram.", "uz": "Shaklni yuborish uchun JavaScriptni yoqing yoki Telegram botini oching.", "en": "Enable JavaScript to submit this form, or open our Telegram bot."}[lang]
+    return f"""<form class="lead" id="lead" action="{url(lang, 'contact')}" method="post" novalidate data-api="{esc(CFG['api_path'])}" data-lang="{lang}" data-page="{esc(page)}" data-email="{esc(CFG.get('email', ''))}" data-subject="{esc(f['subject'])}"
   data-ok="{esc(f['ok'])}" data-err="{esc(f['err'])}" data-required="{esc(f['required'])}" data-sending="{esc(f['sending'])}">
   <h3 class="lead-t">{esc(f["title"])}</h3>
   <div class="row2">
     <label class="fld"><span>{esc(f["name"])}</span><input name="name" autocomplete="name" required maxlength="80"></label>
     <label class="fld"><span>{esc(f["company"])}</span><input name="company" autocomplete="organization" maxlength="120"></label>
   </div>
-  <label class="fld"><span>{esc(f["contact"])}</span><input name="contact" autocomplete="tel" required maxlength="120" inputmode="text"></label>
+  <label class="fld"><span>{esc(f["contact"])}</span><input name="contact" autocomplete="off" required maxlength="120" inputmode="text"></label>
   <label class="fld"><span>{esc(f["message"])}</span><textarea name="message" rows="4" required maxlength="2000" placeholder="{esc(f["message_ph"])}"></textarea></label>
   <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
   <div class="send">
     <p class="send-t">{esc(f["step2"])}</p>
     <div class="send-b">
-      <button type="button" class="btn" data-send="telegram">{esc(f["telegram"])}{arrow_svg()}</button>
+      <button type="submit" class="btn" data-send="telegram">{esc(f["telegram"])}{arrow_svg()}</button>
       {email_btn}
     </div>
     <p class="hint">{esc(f["step2_hint"])}{(" " + esc(f["email_note"])) if CFG.get("email") else ""}</p>
-    <p class="status" role="status" aria-live="polite"></p>
+    <p class="hint">{esc(STUDIO[lang]["privacy"])}</p>
+    <p class="status" id="lead-status" role="status" aria-live="polite"></p>
+    <noscript><p>{esc(nojs)} <a class="link" href="https://t.me/{esc(CFG.get('telegram_username', ''))}">Telegram</a></p></noscript>
   </div>
 </form>"""
 
@@ -282,7 +273,12 @@ def org_ld(lang: str) -> dict:
         "name": "hoolee",
         "url": f"{DOMAIN}/",
         "description": t["site"]["tagline"],
-        "logo": f"{DOMAIN}/favicon.svg",
+        "logo": f"{DOMAIN}/assets/logo.svg",
+        "sameAs": ["https://t.me/" + CFG["telegram_username"]] if CFG.get("telegram_username") else [],
+        "founder": [
+            {"@type": "Person", "name": "Muhammadrizo Abdurazzoqov", "url": "https://mrizo.uz/"},
+            {"@type": "Person", "name": "Bairas Azamatov", "sameAs": ["https://www.linkedin.com/in/bairas-azamatov-731a25127/", "https://www.threads.com/@bairas_azamat"]},
+        ],
         "address": {"@type": "PostalAddress", "addressLocality": "Tashkent", "addressCountry": "UZ"},
         "areaServed": {"@type": "Country", "name": "Uzbekistan"},
         "knowsLanguage": ["uz", "ru", "en"],
@@ -306,26 +302,31 @@ def page_hero(kicker: str, h1: str, lead: str, extra: str = "") -> str:
 
 
 # ───────────── страницы ─────────────
+def workflow(lang: str) -> str:
+    labels = STUDIO[lang]["diagram"]
+    nodes = "".join(f'<div class="flow-node flow-{i}"><span class="flow-icon">{["↗", "h", "✓", "↗"][i]}</span><div><strong>{esc(labels[1+i*2])}</strong><small>{esc(labels[2+i*2])}</small></div><span class="flow-dot"></span></div>' for i in range(4))
+    return f'<div class="workflow"><div class="flow-heading"><span>{esc(labels[0])}</span><span>01 — 04</span></div><div class="flow-nodes">{nodes}</div><div class="flow-footer"><span>INPUT → SYSTEM → OUTPUT</span>{logo_svg()}</div></div>'
+
+
 def page_home(lang: str) -> tuple[str, list, str]:
     t = T[lang]
     h = t["home"]
     lines = "".join(f'<span class="ln"><span class="w" style="--i:{i}">{hl(x)}</span></span>' for i, x in enumerate(h["h1"]))
-    marquee = "".join(f"<span>{esc(x)}</span><i></i>" for x in h["marquee"])
     svc = "".join(
         f"""<a class="card spot" href="{url(lang, 'services')}#{s['id']}" data-reveal style="--i:{i}">
       <span class="num">{s['n']}</span><h3>{esc(s['title'])}</h3><p>{esc(s['short'])}</p><span class="more">{esc(t['cta']['all_services'])}{arrow_svg()}</span></a>"""
         for i, s in enumerate(t["services"]["items"])
     )
     ca, cn = t["cases"]["ark"], t["cases"]["anton"]
-    cases = f"""<a class="case spot" href="{url(lang, 'ark')}" data-reveal>{ark_mini_svg()}<div class="case-b"><span class="tag">{esc(ca['tag'])}</span><h3>{esc(ca['name'])}</h3><p>{esc(ca['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>
-<a class="case spot" href="{url(lang, 'anton')}" data-reveal style="--i:1">{anton_mini_svg()}<div class="case-b"><span class="tag">{esc(cn['tag'])}</span><h3>{esc(cn['name'])}</h3><p>{esc(cn['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>"""
+    cases = f"""<a class="case spot" href="{url(lang, 'ark')}" data-reveal>{ark_mini_svg()}<div class="case-b"><span class="tag">{esc(STUDIO[lang]['project_status'][0])}</span><h3>{esc(ca['name'])}</h3><p>{esc(ca['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>
+<a class="case spot" href="{url(lang, 'anton')}" data-reveal style="--i:1">{anton_mini_svg()}<div class="case-b"><span class="tag">{esc(STUDIO[lang]['project_status'][1])}</span><h3>{esc(cn['name'])}</h3><p>{esc(cn['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>"""
     steps = "".join(f'<li data-reveal style="--i:{i}"><span class="num">{p["n"]}</span><h3>{esc(p["title"])}</h3><p>{esc(p["text"])}</p></li>' for i, p in enumerate(t["process"]))
     prin = "".join(f'<div class="prin" data-reveal style="--i:{i}"><h3>{esc(p["title"])}</h3><p>{esc(p["text"])}</p></div>' for i, p in enumerate(t["principles"]))
     faq = "".join(f'<details class="qa" data-reveal><summary>{esc(x["q"])}</summary><p>{esc(x["a"])}</p></details>' for x in t["faq"])
     body = f"""<main id="main">
 <section class="hero" id="top">
-  <canvas class="net" id="net" aria-hidden="true"></canvas>
-  <div class="wrap hero-in">
+
+  <div class="wrap hero-layout"><div class="hero-in">
     <p class="eyebrow pill" data-reveal><span class="dot"></span>{esc(h['eyebrow'])}</p>
     <h1 class="hero-h">{lines}</h1>
     <p class="hero-lead" data-reveal>{esc(h['lead'])}</p>
@@ -334,9 +335,9 @@ def page_home(lang: str) -> tuple[str, list, str]:
       <a class="btn btn-ghost" href="{url(lang, 'cases')}">{esc(t['cta']['cases'])}</a>
     </div>
   </div>
-  <div class="scroll-hint" aria-hidden="true"><span>{esc(h['scroll'])}</span><i></i></div>
+  {workflow(lang)}</div>
 </section>
-<div class="marquee" aria-hidden="true"><div class="track">{marquee}{marquee}</div></div>
+<div class="wrap proof-strip">{"".join(f"<span>{esc(x)}</span>" for x in STUDIO[lang]["proof"])}</div>
 
 <section class="sec" id="services">
   <div class="wrap">
@@ -359,7 +360,7 @@ def page_home(lang: str) -> tuple[str, list, str]:
   <div class="wrap">
     <p class="eyebrow" data-reveal>{esc(h['process_eyebrow'])}</p>
     <h2 class="h2 rv" data-reveal>{esc(h['process_title'])}</h2>
-    <ol class="steps" id="steps"><span class="steps-line" aria-hidden="true"><i></i></span>{steps}</ol>
+    <ol class="steps" id="steps">{steps}</ol>
   </div>
 </section>
 
@@ -425,8 +426,8 @@ def page_cases(lang: str):
     t = T[lang]
     c = t["cases"]
     ca, cn = c["ark"], c["anton"]
-    cards = f"""<a class="case spot" href="{url(lang, 'ark')}" data-reveal>{ark_mini_svg()}<div class="case-b"><span class="tag">{esc(ca['tag'])}</span><h2>{esc(ca['name'])}</h2><p>{esc(ca['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>
-<a class="case spot" href="{url(lang, 'anton')}" data-reveal style="--i:1">{anton_mini_svg()}<div class="case-b"><span class="tag">{esc(cn['tag'])}</span><h2>{esc(cn['name'])}</h2><p>{esc(cn['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>"""
+    cards = f"""<a class="case spot" href="{url(lang, 'ark')}" data-reveal>{ark_mini_svg()}<div class="case-b"><span class="tag">{esc(STUDIO[lang]['project_status'][0])}</span><h2>{esc(ca['name'])}</h2><p>{esc(ca['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>
+<a class="case spot" href="{url(lang, 'anton')}" data-reveal style="--i:1">{anton_mini_svg()}<div class="case-b"><span class="tag">{esc(STUDIO[lang]['project_status'][1])}</span><h2>{esc(cn['name'])}</h2><p>{esc(cn['short'])}</p><span class="more">{esc(t['cta']['open'])}{arrow_svg()}</span></div></a>"""
     body = f"""<main id="main">
 {page_hero(t['nav']['cases'], c['h1'], c['lead'])}
 <section class="sec tight"><div class="wrap grid2">{cards}</div></section>
@@ -459,8 +460,8 @@ def page_ark(lang: str):
   <h2 class="h2 rv" data-reveal>{esc(a['demo_title'])}</h2>
   <p class="lead-p" data-reveal>{esc(a['demo_lead'])}</p>
   <div class="frame" data-reveal>
-    <div class="frame-bar"><span></span><span></span><span></span><em>demo.hoolee.uz</em><a href="{esc(demo)}" target="_blank" rel="noopener">{esc(a['demo_open'])}{arrow_svg()}</a></div>
-    <div class="frame-body"><div class="frame-load">{esc(a['demo_loading'])}</div><iframe data-src="{esc(demo)}" title="Ark Core demo" loading="lazy" allow="clipboard-write" referrerpolicy="no-referrer"></iframe></div>
+    <div class="frame-bar"><span></span><span></span><span></span><em>demo.arcoai.info</em><a href="{esc(demo)}" target="_blank" rel="noopener">{esc(a['demo_open'])}{arrow_svg()}</a></div>
+    <div class="frame-body"><div class="frame-load">{esc(a['demo_loading'])}</div><iframe src="{esc(demo)}" title="Ark Core demo" loading="lazy" allow="clipboard-write" referrerpolicy="no-referrer"></iframe></div>
   </div>
   <p class="note" data-reveal>{esc(a['demo_note'])}</p>
 </div></section>
@@ -508,31 +509,48 @@ def page_anton(lang: str):
     return body, ld, "anton"
 
 
+TEAM_LINKS = {
+    "rizo": [("portfolio", "https://mrizo.uz/")],
+    "bairas": [
+        ("LinkedIn", "https://www.linkedin.com/in/bairas-azamatov-731a25127/"),
+        ("Threads", "https://www.threads.com/@bairas_azamat"),
+        ("azamatov1998@yandex.ru", "mailto:azamatov1998@yandex.ru"),
+    ],
+}
+TEAM_PHOTOS = {"rizo": "muhammadrizo-abdurazzoqov.jpg", "bairas": "bairas-azamatov.jpg"}
+
+
+def member_card(lang: str, m: dict) -> str:
+    links = "".join(
+        f'<a class="more" href="{esc(href)}"' + ('' if href.startswith("mailto:") else ' target="_blank" rel="noopener"') + f'>{esc(STUDIO[lang]["portfolio"] if label == "portfolio" else label)}{arrow_svg()}</a>'
+        for label, href in TEAM_LINKS[m["key"]]
+    )
+    return f"""<article class="member spot" data-reveal>
+  <img src="/assets/{TEAM_PHOTOS[m['key']]}" alt="{esc(m['name'])}" width="720" height="900" loading="lazy" decoding="async">
+  <div class="member-body"><h3>{esc(m['name'])}</h3><p class="role">{esc(m['role'])}</p><p>{esc(m['text'])}</p><div class="member-links">{links}</div></div>
+</article>"""
+
+
 def page_about(lang: str):
     t = T[lang]
     a = t["about"]
     story = "".join(f'<p data-reveal>{esc(p)}</p>' for p in a["story"])
     vals = "".join(f"<li>{esc(v)}</li>" for v in a["values"])
-    initials = "MA"
+    team = "".join(member_card(lang, m) for m in a["team"])
     body = f"""<main id="main">
 {page_hero(t['nav']['about'], a['h1'], a['lead'])}
 <section class="sec tight"><div class="wrap two">
   <div><h2 class="h3 rv" data-reveal>{esc(a['story_title'])}</h2><div class="prose">{story}</div></div>
-  <div class="founder spot" data-reveal>
-    <div class="photo" role="img" aria-label="{esc(a['founder_photo'])}"><span>{initials}</span><small>{esc(a['founder_photo'])}</small></div>
-    <p class="tag">{esc(a['founder_title'])}</p>
-    <h3>{esc(a['founder_name'])}</h3>
-    <p class="role">{esc(a['founder_role'])}</p>
-    <p>{esc(a['founder_text'])}</p>
-  </div>
+  <div class="team-mono spot" data-reveal aria-hidden="true">{logo_svg()}<span>Built by people.<br>Made for business.</span></div>
 </div></section>
+<section class="sec tight"><div class="wrap"><h2 class="h3 rv" data-reveal>{esc(a['team_title'])}</h2><div class="team">{team}</div></div></section>
 <section class="sec tight"><div class="wrap"><h2 class="h3 rv" data-reveal>{esc(a['values_title'])}</h2><ul class="chips" data-reveal>{vals}</ul></div></section>
 {cta_band(lang)}
 </main>"""
     ld = [
         org_ld(lang),
         breadcrumbs(lang, [("hoolee", "home"), (t["nav"]["about"], "about")]),
-        {"@context": "https://schema.org", "@type": "Person", "name": a["founder_name"], "jobTitle": a["founder_role"], "worksFor": {"@id": f"{DOMAIN}/#org"}, "address": {"@type": "PostalAddress", "addressLocality": "Tashkent", "addressCountry": "UZ"}},
+        *[{"@context": "https://schema.org", "@type": "Person", "name": m["name"], "jobTitle": m["role"], "image": f"{DOMAIN}/assets/{TEAM_PHOTOS[m['key']]}", "worksFor": {"@id": f"{DOMAIN}/#org"}} for m in a["team"]],
     ]
     return body, ld, "about"
 
@@ -541,13 +559,13 @@ def page_contact(lang: str):
     t = T[lang]
     c = t["contact"]
     bot = ""
-    if CFG.get("bot_username"):
-        bot = f'<p><a class="link" href="https://t.me/{esc(CFG["bot_username"])}" target="_blank" rel="noopener">Telegram @{esc(CFG["bot_username"])}</a></p>'
+    if CFG.get("telegram_username"):
+        bot = f'<p><a class="link" href="https://t.me/{esc(CFG["telegram_username"])}" target="_blank" rel="noopener">Telegram @{esc(CFG["telegram_username"])}</a></p>'
     mail = f'<p><a class="link" href="mailto:{esc(CFG["email"])}">{esc(CFG["email"])}</a></p>' if CFG.get("email") else ""
     body = f"""<main id="main">
 {page_hero(t['nav']['contact'], c['h1'], c['lead'])}
 <section class="sec tight"><div class="wrap cta-grid">
-  <div data-reveal class="contact-side"><p class="tag">{esc(c['location'])}</p>{bot}{mail}</div>
+  <div data-reveal class="contact-side"><p>{esc(STUDIO[lang]["contact_note"])}</p><p class="tag">{esc(c['location'])}</p>{bot}{mail}</div>
   {form(lang, 'contact')}
 </div></section>
 </main>"""
@@ -568,14 +586,14 @@ PAGES = {
 
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(text, encoding="utf-8")
+    temporary.replace(path)
 
 
 def build() -> None:
-    if DIST.exists():
-        shutil.rmtree(DIST)
-    DIST.mkdir(parents=True)
-    shutil.copytree(ROOT / "static", DIST / "assets", ignore=shutil.ignore_patterns("favicon.svg", "og.png", "*.md"))
+    DIST.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(ROOT / "static", DIST / "assets", dirs_exist_ok=True, ignore=shutil.ignore_patterns("favicon.svg", "og.png", "*.md"))
     for name in ("favicon.svg", "og.png"):
         if (ROOT / "static" / name).exists():
             shutil.copy(ROOT / "static" / name, DIST / name)
@@ -597,20 +615,10 @@ def build() -> None:
         + footer("en"),
     )
 
-    # корень: перенаправление на язык по умолчанию + выбор языка по браузеру
-    alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{url(l, "home", True)}">' for l in LANGS)
-    links = "".join(f'<a href="/{l}/">{LANG_NAMES[l]}</a> ' for l in LANGS)
-    write(
-        DIST / "index.html",
-        f"""<!doctype html><html lang="{DEFAULT_LANG}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>hoolee</title><meta name="description" content="{esc(T[DEFAULT_LANG]['home']['description'])}">
-<link rel="canonical" href="{url(DEFAULT_LANG, 'home', True)}">{alts}<link rel="alternate" hreflang="x-default" href="{url(DEFAULT_LANG, 'home', True)}">
-<meta name="theme-color" content="#08080b"><meta name="robots" content="index,follow">
-<meta http-equiv="refresh" content="0;url=/{DEFAULT_LANG}/">
-<style>body{{background:#08080b;color:#f2f2f5;font:16px system-ui;display:grid;place-items:center;height:100vh}}a{{color:#ff8a00;margin:0 8px}}</style>
-<script>try{{var l=(navigator.language||'').slice(0,2).toLowerCase();var m={{ru:'ru',en:'en',uz:'uz'}};var p=localStorage.getItem('lang')||m[l]||'{DEFAULT_LANG}';location.replace('/'+p+'/');}}catch(e){{}}</script>
-</head><body><p>{links}</p></body></html>""",
-    )
+    # A complete default-language page works for visitors and crawlers without JS.
+    body, ld, _ = page_home(DEFAULT_LANG)
+    title, desc = PAGES["home"][1](T[DEFAULT_LANG])
+    write(DIST / "index.html", head(DEFAULT_LANG, "home", title, desc, ld) + header(DEFAULT_LANG, "home") + body + footer(DEFAULT_LANG))
 
     # sitemap с hreflang
     urls = []
@@ -619,12 +627,12 @@ def build() -> None:
             alt = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{url(l, route, True)}"/>' for l in LANGS)
             alt += f'<xhtml:link rel="alternate" hreflang="x-default" href="{url(DEFAULT_LANG, route, True)}"/>'
             pr = "1.0" if route == "home" else "0.8"
-            urls.append(f"<url><loc>{url(lang, route, True)}</loc><lastmod>{date.today().isoformat()}</lastmod><priority>{pr}</priority>{alt}</url>")
+            urls.append(f"<url><loc>{url(lang, route, True)}</loc><priority>{pr}</priority>{alt}</url>")
     write(DIST / "sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' + "".join(urls) + "</urlset>")
 
     # robots: разрешаем поисковые и ИИ-краулеры (GEO)
     bots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-User", "PerplexityBot", "Google-Extended", "Applebot-Extended", "YandexBot"]
-    robots = "User-agent: *\nAllow: /\nDisallow: /api/\n\n" + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots) + f"Sitemap: {DOMAIN}/sitemap.xml\n"
+    robots = "User-agent: *\nAllow: /\nDisallow: /api/\n\n" + "".join(f"User-agent: {b}\nAllow: /\nDisallow: /api/\n\n" for b in bots) + f"Sitemap: {DOMAIN}/sitemap.xml\n"
     write(DIST / "robots.txt", robots)
 
     # llms.txt — краткое описание для ИИ-поисковиков
@@ -659,4 +667,9 @@ def llms_txt() -> str:
 
 
 if __name__ == "__main__":
-    build()
+    import fcntl
+    import tempfile
+    lock_name = hashlib.sha256(str(ROOT).encode()).hexdigest()[:16]
+    with open(Path(tempfile.gettempdir()) / f"hoolee-build-{lock_name}.lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        build()
