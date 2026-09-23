@@ -277,7 +277,7 @@ def org_ld(lang: str) -> dict:
         "sameAs": ["https://t.me/" + CFG["telegram_username"]] if CFG.get("telegram_username") else [],
         "founder": [
             {"@type": "Person", "name": "Muhammadrizo Abdurazzoqov", "url": "https://mrizo.uz/"},
-            {"@type": "Person", "name": "Bairas Azamatov", "sameAs": ["https://www.linkedin.com/in/bairas-azamatov-731a25127/", "https://www.threads.com/@bairas_azamat"]},
+            {"@type": "Person", "name": "Bairas Azamatov", "sameAs": ["https://www.linkedin.com/in/bairas-azamatov-731a25127/"]},
         ],
         "address": {"@type": "PostalAddress", "addressLocality": "Tashkent", "addressCountry": "UZ"},
         "areaServed": {"@type": "Country", "name": "Uzbekistan"},
@@ -513,8 +513,7 @@ TEAM_LINKS = {
     "rizo": [("portfolio", "https://mrizo.uz/")],
     "bairas": [
         ("LinkedIn", "https://www.linkedin.com/in/bairas-azamatov-731a25127/"),
-        ("Threads", "https://www.threads.com/@bairas_azamat"),
-        ("azamatov1998@yandex.ru", "mailto:azamatov1998@yandex.ru"),
+        ("azamatov.info@gmail.com", "mailto:azamatov.info@gmail.com"),
     ],
 }
 TEAM_PHOTOS = {"rizo": "muhammadrizo-abdurazzoqov.jpg", "bairas": "bairas-azamatov.jpg"}
